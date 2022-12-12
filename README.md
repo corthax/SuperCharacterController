@@ -1,4 +1,5 @@
 # SuperCharacterController
+ Stride example project.
  Character controller for Stride Game Engine.
  Adaptation of https://github.com/IronWarrior/SuperCharacterController
  ***
