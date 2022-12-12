@@ -47,7 +47,7 @@ namespace SuperCharacterController
             tempParent.Scene = Instance.Entity.Scene;
         }*/
 
-        //public static float TimeSeconds => (float)Instance.Game.UpdateTime.Total.TotalSeconds;
+        public static float TimeSeconds => (float)Instance.Game.UpdateTime.Total.TotalSeconds;
         public static float DeltaTime => (float)Instance.Game.UpdateTime.Elapsed.TotalSeconds;
         // debug
         public static void LogError(string msg) => Instance.Log.Error(msg);
