@@ -1,0 +1,323 @@
+!SceneAsset
+Id: cbdea752-d606-4d4f-9f47-e45949cd550e
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+ChildrenIds: []
+Offset: {X: 0.0, Y: 0.0, Z: 0.0}
+Hierarchy:
+    RootParts:
+        - ref!! d6af554e-8af6-4606-9e62-2981ab2bd83b
+        - ref!! 98b9d351-9d7a-4922-804f-943d5a98acaa
+        - ref!! 4663ba42-767f-4d46-9320-1da3f7eaf00f
+        - ref!! c65b3f44-325f-49b1-8237-3beb60b420d4
+        - ref!! a77a83e6-d815-4ed7-b705-876bcb99766b
+        - ref!! f19a828d-90b5-4044-86e7-b5517c33b752
+        - ref!! 31553047-0e24-4a5b-a336-af0861a83ecd
+        - ref!! 8ecf027b-d750-4b43-98ac-efd884a6126d
+        - ref!! f7526750-342d-461c-b871-d8889531f56c
+        - ref!! 2589cd66-f79f-4b01-ad33-372ccec61c68
+        - ref!! 162181d7-e5ca-4cb5-85db-ed729c2b44a2
+    Parts:
+        -   Folder: null
+            Entity:
+                Id: 162181d7-e5ca-4cb5-85db-ed729c2b44a2
+                Name: TestCube
+                Components:
+                    236f7c6df132b0bb795a835c30b85932: !TransformComponent
+                        Id: 3c35edf8-e23b-4d16-b353-3849e625673a
+                        Position: {X: -3.451049, Y: 0.22728682, Z: 1.2369094}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    4f67cc7639c47e2728aa7f028b333688: !ModelComponent
+                        Id: 8873c451-7cc1-4b26-90f0-fb416e5edd24
+                        Model: badf0d94-ac3b-45d8-b31a-5b8d8ba84dcf:TestCube
+                        Materials: {}
+                    6d637c66acbb078fc389dd3c259ae2a7: !StaticColliderComponent
+                        Id: 3fa3958f-bc54-4608-9b53-68180e5deef6
+                        CanSleep: true
+                        Restitution: 0.0
+                        Friction: 0.5
+                        RollingFriction: 0.0
+                        CcdMotionThreshold: 0.0
+                        CcdSweptSphereRadius: 0.0
+                        IsTrigger: false
+                        AlwaysUpdateNaviMeshCache: false
+                        ColliderShapes:
+                            d8823dc80d3d7801fc21a2d4499a52a6: !StaticMeshColliderShapeDesc
+                                Model: badf0d94-ac3b-45d8-b31a-5b8d8ba84dcf:TestCube
+                    fa47e6604f397a4d43a11531132544ee: !SuperCharacterController.BSPTree,SuperCharacterController
+                        Id: 0a948b8c-5fde-4543-b4f3-4cf0117f383e
+                    5158304acfd6ce8bb4b32999dbd92798: !SuperCharacterController.SuperCollisionType,SuperCharacterController
+                        Id: 9d73f9ff-4ac5-4e41-8284-d92d95e1b874
+                        StandAngle: 40.0
+                        SlopeLimit: 40.0
+        -   Folder: null
+            Entity:
+                Id: 2589cd66-f79f-4b01-ad33-372ccec61c68
+                Name: TestCube
+                Components:
+                    236f7c6df132b0bb795a835c30b85932: !TransformComponent
+                        Id: 035f90e3-849f-486d-b746-6179886464be
+                        Position: {X: -3.451049, Y: 0.22728682, Z: -2.4200852}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    4f67cc7639c47e2728aa7f028b333688: !ModelComponent
+                        Id: 7e10f6e5-f546-42b1-b7b9-6db40f1c54be
+                        Model: badf0d94-ac3b-45d8-b31a-5b8d8ba84dcf:TestCube
+                        Materials: {}
+                    6d637c66acbb078fc389dd3c259ae2a7: !StaticColliderComponent
+                        Id: 4e829e86-33d9-4f6a-8011-de0dbb103ebe
+                        CanSleep: true
+                        Restitution: 0.0
+                        Friction: 0.5
+                        RollingFriction: 0.0
+                        CcdMotionThreshold: 0.0
+                        CcdSweptSphereRadius: 0.0
+                        IsTrigger: false
+                        AlwaysUpdateNaviMeshCache: false
+                        ColliderShapes:
+                            d8823dc80d3d7801fc21a2d4499a52a6: !StaticMeshColliderShapeDesc
+                                Model: badf0d94-ac3b-45d8-b31a-5b8d8ba84dcf:TestCube
+                    5a75f9da99c8348dcf2496576c58183d: !SuperCharacterController.BSPTree,SuperCharacterController
+                        Id: ecfa4b90-b0e3-451e-acf9-4a1bc0678154
+                    7149da4dad3918784db4cb3681c2ca47: !SuperCharacterController.SuperCollisionType,SuperCharacterController
+                        Id: 4a51bb5b-d047-4396-b425-ef9011843ea0
+                        StandAngle: 40.0
+                        SlopeLimit: 40.0
+        -   Folder: null
+            Entity:
+                Id: 31553047-0e24-4a5b-a336-af0861a83ecd
+                Name: TestCube
+                Components:
+                    236f7c6df132b0bb795a835c30b85932: !TransformComponent
+                        Id: d09685e0-43fb-4512-b56e-f5a1f980c1e8
+                        Position: {X: 0.387044, Y: 0.22728682, Z: -2.4200852}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    4f67cc7639c47e2728aa7f028b333688: !ModelComponent
+                        Id: 5652c080-f965-4812-a9ef-e74f0549fd35
+                        Model: badf0d94-ac3b-45d8-b31a-5b8d8ba84dcf:TestCube
+                        Materials: {}
+                    6d637c66acbb078fc389dd3c259ae2a7: !StaticColliderComponent
+                        Id: 0a2daf15-9084-454b-bccd-03ffe0dfd9cb
+                        CanSleep: true
+                        Restitution: 0.0
+                        Friction: 0.5
+                        RollingFriction: 0.0
+                        CcdMotionThreshold: 0.0
+                        CcdSweptSphereRadius: 0.0
+                        IsTrigger: false
+                        AlwaysUpdateNaviMeshCache: false
+                        ColliderShapes:
+                            d8823dc80d3d7801fc21a2d4499a52a6: !StaticMeshColliderShapeDesc
+                                Model: badf0d94-ac3b-45d8-b31a-5b8d8ba84dcf:TestCube
+                    ea17164ce8b675979878ca15dd1353bb: !SuperCharacterController.BSPTree,SuperCharacterController
+                        Id: 230eff40-5067-4e60-bc20-c71aae1e5088
+                    eda3868e20f411f7a59b28edeba74c5c: !SuperCharacterController.SuperCollisionType,SuperCharacterController
+                        Id: 45a060a5-8c11-492a-a33f-58b410acc310
+                        StandAngle: 40.0
+                        SlopeLimit: 40.0
+        -   Entity:
+                Id: 4663ba42-767f-4d46-9320-1da3f7eaf00f
+                Name: Directional light
+                Components:
+                    caa1d047a2d46368f9dd5571460361df: !TransformComponent
+                        Id: 14d961b9-9d8b-417c-b3d7-a38a9653ad43
+                        Position: {X: 0.0, Y: 2.0, Z: 0.0}
+                        Rotation: {X: 1.131334E-08, Y: -0.9659258, Z: -0.25881904, W: -4.222196E-08}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    74bbda783c2a1c6517045c0c6f19df28: !LightComponent
+                        Id: 20b76626-ef0e-46ce-9af7-c0a2a98c87f9
+                        Type: !LightDirectional
+                            Color: !ColorRgbProvider
+                                Value: {R: 1.0, G: 1.0, B: 1.0}
+                            Shadow:
+                                Enabled: true
+                                Filter: !LightShadowMapFilterTypePcf
+                                    FilterSize: Filter5x5
+                                Size: Large
+                                DepthRange: {}
+                                PartitionMode: !LightDirectionalShadowMap.PartitionLogarithmic {}
+                                ComputeTransmittance: false
+                                BiasParameters: {}
+                        Intensity: 20.0
+        -   Folder: null
+            Entity:
+                Id: 8ecf027b-d750-4b43-98ac-efd884a6126d
+                Name: TestCube
+                Components:
+                    236f7c6df132b0bb795a835c30b85932: !TransformComponent
+                        Id: cb5cce56-923b-437a-85e5-0bd7d499876e
+                        Position: {X: 6.425484, Y: 2.8283267, Z: -2.4200852}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.5388711, W: 0.8423882}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    4f67cc7639c47e2728aa7f028b333688: !ModelComponent
+                        Id: 4928a108-5cce-4bcf-bd46-c4da1c07fc5f
+                        Model: badf0d94-ac3b-45d8-b31a-5b8d8ba84dcf:TestCube
+                        Materials: {}
+                    6d637c66acbb078fc389dd3c259ae2a7: !StaticColliderComponent
+                        Id: 03743f1c-2be4-41f9-a0f1-64cc934c010c
+                        CanSleep: true
+                        Restitution: 0.0
+                        Friction: 0.5
+                        RollingFriction: 0.0
+                        CcdMotionThreshold: 0.0
+                        CcdSweptSphereRadius: 0.0
+                        IsTrigger: false
+                        AlwaysUpdateNaviMeshCache: false
+                        ColliderShapes:
+                            d8823dc80d3d7801fc21a2d4499a52a6: !StaticMeshColliderShapeDesc
+                                Model: badf0d94-ac3b-45d8-b31a-5b8d8ba84dcf:TestCube
+                    fec8fa881681f59c7479725bb130d287: !SuperCharacterController.BSPTree,SuperCharacterController
+                        Id: 8ff23684-ab57-4f76-939f-fdb8e02e2a2e
+                    1e68eefc4c434e56b9632ce95bfab520: !SuperCharacterController.SuperCollisionType,SuperCharacterController
+                        Id: 18a6d831-5b44-4480-b2aa-6e14b1a34af6
+                        StandAngle: 40.0
+                        SlopeLimit: 40.0
+        -   Entity:
+                Id: 98b9d351-9d7a-4922-804f-943d5a98acaa
+                Name: Camera
+                Components:
+                    f19083a4704aae884ece70335e3535fb: !TransformComponent
+                        Id: 52ca2790-34e1-481f-b6f5-4adea4ec4733
+                        Position: {X: 13.446493, Y: 15.216146, Z: -10.909097}
+                        Rotation: {X: -0.14491412, Y: 0.86050326, Z: 0.2761362, W: 0.40284345}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    7e82a5187f8df49c339f73a788783149: !CameraComponent
+                        Id: f8a45d27-142a-4508-b722-34649ecbbc71
+                        Name: null
+                        Projection: Perspective
+                        Slot: 2fd21b72-13bf-428c-9dba-33b94e1333fc
+                    435cfd0a88364f28d1df6fd9c771ff9f: !SuperCharacterController.BasicCameraController,SuperCharacterController
+                        Id: 21a24fad-a86e-46f3-a2cb-86c7fd6fffa5
+                        character: ref!! ffb7c4a5-5732-4983-aeb1-396ce0749e07
+                        Gamepad: false
+                        KeyboardMovementSpeed: {X: 5.0, Y: 5.0, Z: 5.0}
+                        TouchMovementSpeed: {X: 0.7, Y: 0.7, Z: 0.3}
+                        SpeedFactor: 5.0
+                        KeyboardRotationSpeed: {X: 3.0, Y: 3.0}
+                        MouseRotationSpeed: {X: 1.0, Y: 1.0}
+                        TouchRotationSpeed: {X: 1.0, Y: 0.7}
+        -   Entity:
+                Id: a77a83e6-d815-4ed7-b705-876bcb99766b
+                Name: Char
+                Components:
+                    dc88ab4fd7eeaaafccdc6508b539ebf3: !TransformComponent
+                        Id: dab015ad-73da-4043-99b2-55627e548b6b
+                        Position: {X: 0.0, Y: 5.7038946, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    fa7e56d7b974a0da13aa85aaa9c5e83c: !ModelComponent
+                        Id: cfb1d2be-e333-4361-a48d-b401018fe9c8
+                        Model: 50bc1c6c-70d0-43f7-a38e-6dd5b00312df:Char
+                        Materials: {}
+                    ff2d798709385f6e97c9bdeb1379697a: !SuperCharacterController.SuperCharacterController,SuperCharacterController
+                        Id: ffb7c4a5-5732-4983-aeb1-396ce0749e07
+                        FixedTimeStep: false
+                        FixedUpdatesPerSecond: 40
+                        ClampToMovingGround: false
+                        GroundClamping: false
+                        SlopeLimiting: false
+        -   Entity:
+                Id: c65b3f44-325f-49b1-8237-3beb60b420d4
+                Name: Skybox
+                Components:
+                    6c4439099e0283cab348c6403a4cd62c: !TransformComponent
+                        Id: 81ff5894-684f-4a6c-b806-3b73a694f4d1
+                        Position: {X: 0.0, Y: 2.0, Z: -2.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    09d7d432d8b78a0f8e752dde65b14d3a: !BackgroundComponent
+                        Id: 7c843b82-4ffa-4980-8d95-c4f151fa2049
+                        Texture: f9535100-3e4d-4adf-a109-4e7498256b59:Skybox texture
+                    a1cf598ed54e24490f5d2d855fe5f24f: !LightComponent
+                        Id: 427a0925-92d8-44b6-b782-15219695bac8
+                        Type: !LightSkybox
+                            Skybox: 2d854138-5834-4677-a8c0-163fdc92e9cf:Skybox
+        -   Entity:
+                Id: d6af554e-8af6-4606-9e62-2981ab2bd83b
+                Name: SCC
+                Components:
+                    0dc2a2931e4637d679910a23a531ff79: !TransformComponent
+                        Id: 2fc00eca-88ce-4219-8436-58191383c9dd
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    afda054552928177cb3a2681ad00953f: !SuperCharacterController.Math3d,SuperCharacterController
+                        Id: b035f962-c383-4226-afb1-ba2fb9861356
+        -   Entity:
+                Id: f19a828d-90b5-4044-86e7-b5517c33b752
+                Name: TestCube
+                Components:
+                    236f7c6df132b0bb795a835c30b85932: !TransformComponent
+                        Id: 943c1a3b-466f-4757-9484-de72127d2074
+                        Position: {X: 0.387044, Y: 0.22728682, Z: 0.6991718}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    4f67cc7639c47e2728aa7f028b333688: !ModelComponent
+                        Id: d5722cd0-85bb-48db-96bc-24a59b9222c9
+                        Model: badf0d94-ac3b-45d8-b31a-5b8d8ba84dcf:TestCube
+                        Materials: {}
+                    6d637c66acbb078fc389dd3c259ae2a7: !StaticColliderComponent
+                        Id: d9dff329-3251-4f07-825c-48ba5a6e454f
+                        CanSleep: true
+                        Restitution: 0.0
+                        Friction: 0.5
+                        RollingFriction: 0.0
+                        CcdMotionThreshold: 0.0
+                        CcdSweptSphereRadius: 0.0
+                        IsTrigger: false
+                        AlwaysUpdateNaviMeshCache: false
+                        ColliderShapes:
+                            d8823dc80d3d7801fc21a2d4499a52a6: !StaticMeshColliderShapeDesc
+                                Model: badf0d94-ac3b-45d8-b31a-5b8d8ba84dcf:TestCube
+                    e0389e8c97550515cf1f75ef84bf3673: !SuperCharacterController.BSPTree,SuperCharacterController
+                        Id: d7661048-fc27-4fef-aba4-8b7af737513f
+                    df39e0c451e7cbc54f4fdf3995800206: !SuperCharacterController.SuperCollisionType,SuperCharacterController
+                        Id: 2e3d65c0-3f9f-4732-b82e-a723c3101961
+                        StandAngle: 40.0
+                        SlopeLimit: 40.0
+        -   Folder: null
+            Entity:
+                Id: f7526750-342d-461c-b871-d8889531f56c
+                Name: TestCube
+                Components:
+                    236f7c6df132b0bb795a835c30b85932: !TransformComponent
+                        Id: c33815b9-737d-4950-875a-f57ca3bff1c5
+                        Position: {X: 4.4901133, Y: 1.183039, Z: -2.4200852}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    4f67cc7639c47e2728aa7f028b333688: !ModelComponent
+                        Id: a0912f8e-f9cd-4d26-b003-462e595b0a55
+                        Model: badf0d94-ac3b-45d8-b31a-5b8d8ba84dcf:TestCube
+                        Materials: {}
+                    6d637c66acbb078fc389dd3c259ae2a7: !StaticColliderComponent
+                        Id: fa1ad030-e439-45ac-ad55-1457fb78c886
+                        CanSleep: true
+                        Restitution: 0.0
+                        Friction: 0.5
+                        RollingFriction: 0.0
+                        CcdMotionThreshold: 0.0
+                        CcdSweptSphereRadius: 0.0
+                        IsTrigger: false
+                        AlwaysUpdateNaviMeshCache: false
+                        ColliderShapes:
+                            d8823dc80d3d7801fc21a2d4499a52a6: !StaticMeshColliderShapeDesc
+                                Model: badf0d94-ac3b-45d8-b31a-5b8d8ba84dcf:TestCube
+                    8f4872a049625bcc9fc45050d9f982cd: !SuperCharacterController.BSPTree,SuperCharacterController
+                        Id: b7825bf7-3b1a-4deb-9b0f-842709401d81
+                    7dcba0f9de8f9c190dfc53ec2dda5a4e: !SuperCharacterController.SuperCollisionType,SuperCharacterController
+                        Id: ed5c3846-149d-4aec-bcc1-fc309ccab7c7
+                        StandAngle: 40.0
+                        SlopeLimit: 40.0

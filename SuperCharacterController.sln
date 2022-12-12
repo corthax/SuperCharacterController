@@ -1,0 +1,31 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
+MinimumVisualStudioVersion = 16.0.0.0
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperCharacterController.Windows", "SuperCharacterController.Windows\SuperCharacterController.Windows.csproj", "{177E22BB-1EF3-411C-AC9B-E58468C046CA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperCharacterController", "SuperCharacterController\SuperCharacterController.csproj", "{A68F63B8-AA16-4FEC-96D0-D0608500EA39}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{177E22BB-1EF3-411C-AC9B-E58468C046CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{177E22BB-1EF3-411C-AC9B-E58468C046CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{177E22BB-1EF3-411C-AC9B-E58468C046CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{177E22BB-1EF3-411C-AC9B-E58468C046CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A68F63B8-AA16-4FEC-96D0-D0608500EA39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A68F63B8-AA16-4FEC-96D0-D0608500EA39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A68F63B8-AA16-4FEC-96D0-D0608500EA39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A68F63B8-AA16-4FEC-96D0-D0608500EA39}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0B6EFC32-FD63-427A-B001-A245FEA6CF01}
+	EndGlobalSection
+EndGlobal
