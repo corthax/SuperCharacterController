@@ -4,7 +4,6 @@ using Stride.Core.Mathematics;
 using Matrix4x4 = System.Numerics.Matrix4x4;
 using Stride.Physics;
 using Stride.Core;
-using System.Windows.Forms;
 
 namespace SuperCharacterController
 {
