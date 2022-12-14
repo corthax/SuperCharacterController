@@ -46,12 +46,6 @@ Hierarchy:
                         ColliderShapes:
                             d8823dc80d3d7801fc21a2d4499a52a6: !StaticMeshColliderShapeDesc
                                 Model: badf0d94-ac3b-45d8-b31a-5b8d8ba84dcf:TestCube
-                    fa47e6604f397a4d43a11531132544ee: !SuperCharacterController.BSPTree,SuperCharacterController
-                        Id: 0a948b8c-5fde-4543-b4f3-4cf0117f383e
-                    5158304acfd6ce8bb4b32999dbd92798: !SuperCharacterController.SuperCollisionType,SuperCharacterController
-                        Id: 9d73f9ff-4ac5-4e41-8284-d92d95e1b874
-                        StandAngle: 40.0
-                        SlopeLimit: 40.0
         -   Folder: null
             Entity:
                 Id: 2589cd66-f79f-4b01-ad33-372ccec61c68
@@ -80,12 +74,6 @@ Hierarchy:
                         ColliderShapes:
                             d8823dc80d3d7801fc21a2d4499a52a6: !StaticMeshColliderShapeDesc
                                 Model: badf0d94-ac3b-45d8-b31a-5b8d8ba84dcf:TestCube
-                    5a75f9da99c8348dcf2496576c58183d: !SuperCharacterController.BSPTree,SuperCharacterController
-                        Id: ecfa4b90-b0e3-451e-acf9-4a1bc0678154
-                    7149da4dad3918784db4cb3681c2ca47: !SuperCharacterController.SuperCollisionType,SuperCharacterController
-                        Id: 4a51bb5b-d047-4396-b425-ef9011843ea0
-                        StandAngle: 40.0
-                        SlopeLimit: 40.0
         -   Folder: null
             Entity:
                 Id: 31553047-0e24-4a5b-a336-af0861a83ecd
@@ -252,8 +240,6 @@ Hierarchy:
                         Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children: {}
-                    afda054552928177cb3a2681ad00953f: !SuperCharacterController.Math3d,SuperCharacterController
-                        Id: b035f962-c383-4226-afb1-ba2fb9861356
         -   Entity:
                 Id: f19a828d-90b5-4044-86e7-b5517c33b752
                 Name: TestCube
@@ -315,9 +301,3 @@ Hierarchy:
                         ColliderShapes:
                             d8823dc80d3d7801fc21a2d4499a52a6: !StaticMeshColliderShapeDesc
                                 Model: badf0d94-ac3b-45d8-b31a-5b8d8ba84dcf:TestCube
-                    8f4872a049625bcc9fc45050d9f982cd: !SuperCharacterController.BSPTree,SuperCharacterController
-                        Id: b7825bf7-3b1a-4deb-9b0f-842709401d81
-                    7dcba0f9de8f9c190dfc53ec2dda5a4e: !SuperCharacterController.SuperCollisionType,SuperCharacterController
-                        Id: ed5c3846-149d-4aec-bcc1-fc309ccab7c7
-                        StandAngle: 40.0
-                        SlopeLimit: 40.0

@@ -2,7 +2,7 @@
 using Stride.Engine;
 using Stride.Core.Mathematics;
 
-namespace GameClient.SuperCharacter
+namespace SCC.SuperCharacter
 {
     public static class Math3d
     {

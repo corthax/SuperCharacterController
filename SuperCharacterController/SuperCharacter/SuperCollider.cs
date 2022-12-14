@@ -3,7 +3,7 @@ using Stride.Engine;
 using Stride.Physics;
 using System;
 
-namespace GameClient.SuperCharacter
+namespace SCC.SuperCharacter
 {
     public static class SuperCollider
     {

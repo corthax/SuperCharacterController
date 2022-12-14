@@ -1,10 +1,11 @@
 ﻿using System;
+using SCC.SuperCharacter;
 using Stride.Core;
 using Stride.Core.Mathematics;
 using Stride.Engine;
 using Stride.Input;
 
-namespace SuperCharacterController
+namespace SCC
 {
     /// <summary>
     /// A script that allows to move and rotate an entity through keyboard, mouse and touch input to provide basic camera navigation.

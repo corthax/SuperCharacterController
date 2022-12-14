@@ -1,8 +1,8 @@
-﻿using GameClient.Tools;
+﻿using SCC.Tools;
 using Stride.Core.Mathematics;
 using System;
 
-namespace GameClient.SuperCharacter
+namespace SCC.SuperCharacter
 {
     public static class SuperMath
     {

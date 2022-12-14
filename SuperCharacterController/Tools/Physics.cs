@@ -4,7 +4,7 @@ using Stride.Engine;
 using Stride.Physics;
 using System.Collections.Generic;
 
-namespace GameClient.Tools
+namespace SCC.Tools
 {
     public class Physics : StartupScript
     {

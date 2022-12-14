@@ -2,7 +2,7 @@
 using Stride.Engine;
 using Stride.Core;
 
-namespace GameClient.Tools
+namespace SCC.Tools
 {
     public class Tools : StartupScript
     {
