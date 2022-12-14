@@ -1,34 +1,33 @@
 ﻿using System;
 using Stride.Engine;
 using Stride.Core.Mathematics;
-using Matrix4x4 = System.Numerics.Matrix4x4;
-using Stride.Physics;
-using Stride.Core;
 
-namespace SuperCharacterController
+namespace GameClient.SuperCharacter
 {
-    public class Math3d : StartupScript
+    public static class Math3d
     {
-        private static Math3d instance;
+        /*private static Math3d instance;
         public static Math3d Instance
         {
             get { return instance; }
             private set { instance ??= value; }
-        }
+        }*/
 
         //private static Entity tempChild;
         //private static Entity tempParent;
 
-        [DataMemberIgnore]
-        public Simulation simulation;
+        //[DataMemberIgnore]
+        //public Simulation simulation;
 
-        public override void Start()
-        {
-            Instance ??= this;
-            simulation ??= this.GetSimulation();
-            //simulation.ColliderShapesRendering = true;
+        public const float Deg2Rad = (MathF.PI * 2) / 360;
+        public const float Rad2Deg = 360 / (MathF.PI * 2);
+
+        //public override void Start()
+        //{
+            //Instance = this;
+            //simulation = this.GetSimulation();
             //Init();
-        }
+        //}
 
         /*public static void Init()
         {
@@ -46,11 +45,11 @@ namespace SuperCharacterController
             tempParent.Scene = Instance.Entity.Scene;
         }*/
 
-        public static float TimeSeconds => (float)Instance.Game.UpdateTime.Total.TotalSeconds;
+        /*public static float TimeSeconds => (float)Instance.Game.UpdateTime.Total.TotalSeconds;
         public static float DeltaTime => (float)Instance.Game.UpdateTime.Elapsed.TotalSeconds;
         // debug
         public static void LogError(string msg) => Instance.Log.Error(msg);
-        public static void LogInfo(string msg) => Instance.Log.Info(msg);
+        public static void LogInfo(string msg) => Instance.Log.Info(msg);*/
 
         //increase or decrease the length of vector by size
         public static Vector3 AddVectorLength(Vector3 vector, float size)
@@ -412,7 +411,7 @@ namespace SuperCharacterController
             return q * Vector3.UnitX;
         }
 
-        public static Vector4 Matrix4x4_GetColumn(Matrix4x4 m, int index)
+        public static Vector4 Matrix4x4_GetColumn(Matrix m, int index)
         {
             return index switch
             {
@@ -425,7 +424,7 @@ namespace SuperCharacterController
         }
 
         //Gets a quaternion from a matrix
-        public static Quaternion QuaternionFromMatrix(Matrix4x4 m)
+        public static Quaternion QuaternionFromMatrix(Matrix m)
         {
             var vF = (Vector3)Matrix4x4_GetColumn(m, 2);
             var vU = (Vector3)Matrix4x4_GetColumn(m, 1);
@@ -433,7 +432,7 @@ namespace SuperCharacterController
         }
 
         //Gets a position from a matrix
-        public static Vector3 PositionFromMatrix(Matrix4x4 m)
+        public static Vector3 PositionFromMatrix(Matrix m)
         {
 
             Vector4 vector4Position = Matrix4x4_GetColumn(m, 3);
@@ -571,10 +570,10 @@ namespace SuperCharacterController
             Vector3 projectedPoint = ProjectPointOnLineSegment(screenPos1, screenPos2, mousePosition);
 
             //set z to Zero
-            projectedPoint = new Vector3(projectedPoint.x, projectedPoint.y, 0f);
+            projectedPoint = new Vector3(projectedPoint.X, projectedPoint.Y, 0f);
 
             Vector3 vector = projectedPoint - mousePosition;
-            return vector.magnitude;
+            return vector.Magnitude;
         }*/
 
 
@@ -591,10 +590,10 @@ namespace SuperCharacterController
             Vector3 screenPos = currentCamera.WorldToScreenPoint(point);
 
             //set z to Zero
-            screenPos = new Vector3(screenPos.x, screenPos.y, 0f);
+            screenPos = new Vector3(screenPos.X, screenPos.Y, 0f);
 
             Vector3 vector = screenPos - mousePosition;
-            float fullDistance = vector.magnitude;
+            float fullDistance = vector.Magnitude;
             float circleDistance = fullDistance - radius;
 
             return circleDistance;
@@ -694,6 +693,173 @@ namespace SuperCharacterController
             {
                 return false;
             }
+        }
+
+        // matrix math
+
+        /// <summary>
+        /// Creates a rotation matrix. Assumes unit quaternion.
+        /// </summary>
+        /// <param name="rotation"></param>
+        /// <returns></returns>
+        public static Matrix Matrix_Rotation(Quaternion rotation)
+        {
+            // Precalculate coordinate products
+            float x = rotation.X * 2F;
+            float y = rotation.Y * 2F;
+            float z = rotation.Z * 2F;
+            float xx = rotation.X * x;
+            float yy = rotation.Y * y;
+            float zz = rotation.Z * z;
+            float xy = rotation.X * y;
+            float xz = rotation.X * z;
+            float yz = rotation.Y * z;
+            float wx = rotation.W * x;
+            float wy = rotation.W * y;
+            float wz = rotation.W * z;
+
+            // Calculate 3x3 matrix from orthonormal basis
+            Matrix m = new();
+            m.M11 = 1F - (yy + zz);     m.M21 = xy + wz;            m.M31 = xz - wy;            m.M41 = 0F;
+            m.M12 = xy - wz;            m.M22 = 1F - (xx + zz);     m.M32 = yz + wx;            m.M42 = 0F;
+            m.M13 = xz + wy;            m.M23 = yz - wx;            m.M33 = 1F - (xx + yy);     m.M43 = 0F;
+            m.M14 = 0F;                 m.M24 = 0F;                 m.M34 = 0F;                 m.M44 = 1F;
+            return m;
+        }
+
+        /// <summary>
+        /// Creates a translation matrix.
+        /// </summary>
+        /// <param name="translation"></param>
+        /// <returns></returns>
+        public static Matrix Matrix_Translation(Vector3 translation)
+        {
+            Matrix m = new();
+            m.M11 = 1F; m.M12 = 0F; m.M13 = 0F; m.M14 = translation.X;
+            m.M21 = 0F; m.M22 = 1F; m.M23 = 0F; m.M24 = translation.Y;
+            m.M32 = 0F; m.M32 = 0F; m.M33 = 1F; m.M34 = translation.Z;
+            m.M41 = 0F; m.M42 = 0F; m.M43 = 0F; m.M44 = 1F;
+            return m;
+        }
+
+        /// <summary>
+        /// Creates a scaling matrix.
+        /// </summary>
+        /// <param name="scaling"></param>
+        /// <returns></returns>
+        public static Matrix Matrix_Scale(Vector3 scaling)
+        {
+            Matrix m = new();
+            m.M11 = scaling.X;  m.M12 = 0F;         m.M13 = 0F;         m.M14 = 0F;
+            m.M21 = 0F;         m.M22 = scaling.Y;  m.M23 = 0F;         m.M24 = 0F;
+            m.M31 = 0F;         m.M32 = 0F;         m.M33 = scaling.Z;  m.M34 = 0F;
+            m.M41 = 0F;         m.M42 = 0F;         m.M43 = 0F;         m.M44 = 1F;
+            return m;
+        }
+
+        /// <summary>
+        /// Transforms a direction by matrix.
+        /// </summary>
+        /// <param name="matrix"></param>
+        /// <param name="vector"></param>
+        /// <returns></returns>
+        public static Vector3 Matrix_MultiplyVector(Matrix matrix, Vector3 vector)
+        {
+            Vector3 res;
+            res.X = matrix.M11 * vector.X + matrix.M12 * vector.Y + matrix.M13 * vector.Z;
+            res.Y = matrix.M21 * vector.X + matrix.M22 * vector.Y + matrix.M23 * vector.Z;
+            res.Z = matrix.M31 * vector.X + matrix.M32 * vector.Y + matrix.M33 * vector.Z;
+            return res;
+        }
+
+        /// <summary>
+        /// Transforms a position by matrix, without a perspective divide. (fast)
+        /// </summary>
+        /// <param name="matrix"></param>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public static Vector3 Matrix_MultiplyPoint3x4(Matrix matrix, Vector3 point)
+        {
+            Vector3 res;
+            res.X = matrix.M11 * point.X + matrix.M12 * point.Y + matrix.M13 * point.Z + matrix.M14;
+            res.Y = matrix.M21 * point.X + matrix.M22 * point.Y + matrix.M23 * point.Z + matrix.M24;
+            res.Z = matrix.M31 * point.X + matrix.M32 * point.Y + matrix.M33 * point.Z + matrix.M34;
+            return res;
+        }
+
+        /// <summary>
+        /// Transforms a position by matrix, with a perspective divide. (generic)
+        /// </summary>
+        /// <param name="matrix"></param>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public static Vector3 Matrix_MultiplyPoint(Matrix matrix, Vector3 point)
+        {
+            Vector3 res;
+            float w;
+            res.X = matrix.M11 * point.X + matrix.M12 * point.Y + matrix.M13 * point.Z + matrix.M14;
+            res.Y = matrix.M21 * point.X + matrix.M22 * point.Y + matrix.M23 * point.Z + matrix.M24;
+            res.Z = matrix.M31 * point.X + matrix.M32 * point.Y + matrix.M33 * point.Z + matrix.M34;
+                w = matrix.M41 * point.X + matrix.M42 * point.Y + matrix.M43 * point.Z + matrix.M44;
+
+            w = 1F / w;
+            res.X *= w;
+            res.Y *= w;
+            res.Z *= w;
+            return res;
+        }
+
+        /// <summary>
+        /// Returns position from matrix.
+        /// </summary>
+        /// <param name="matrix"></param>
+        /// <returns></returns>
+        public static Vector3 Matrix_GetPosition(Matrix matrix)
+        {
+            return new Vector3(matrix.M14, matrix.M24, matrix.M34);
+        }
+
+        /// <summary>
+        /// Transforms a plane by matrix.
+        /// </summary>
+        /// <param name="matrix"></param>
+        /// <param name="plane"></param>
+        /// <returns></returns>
+        public static Plane Matrix_TransformPlane(Matrix matrix, Plane plane)
+        {
+            var ittrans = Matrix.Invert(matrix);
+
+            float x = plane.Normal.X, y = plane.Normal.Y, z = plane.Normal.Z, w = plane.D;
+            // note: a transpose is part of this transformation
+            var a = ittrans.M11 * x + ittrans.M21 * y + ittrans.M31 * z + ittrans.M41 * w;
+            var b = ittrans.M12 * x + ittrans.M22 * y + ittrans.M32 * z + ittrans.M42 * w;
+            var c = ittrans.M13 * x + ittrans.M23 * y + ittrans.M33 * z + ittrans.M43 * w;
+            var d = ittrans.M14 * x + ittrans.M24 * y + ittrans.M34 * z + ittrans.M44 * w;
+
+            return new Plane(new Vector3(a, b, c), d);
+        }
+
+        /// <summary>
+        /// Returns entity's transform TRS matrix.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public static Matrix Matrix_TRS(Entity entity)
+        {
+            var t = Matrix_Translation(entity.Transform.Position);
+            var r = Matrix_Rotation(entity.Transform.Rotation);
+            var s = Matrix_Scale(entity.Transform.Scale);
+            return t * r * s;
+        }
+
+        /// <summary>
+        /// Returns entity's transform inverse TRS matrix.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public static Matrix Matrix_TRS_Inverse(Entity entity)
+        {
+            return Matrix.Invert(Matrix_TRS(entity));
         }
     }
 }

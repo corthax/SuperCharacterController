@@ -3,7 +3,7 @@ using Stride.Engine;
 using Stride.Physics;
 using System;
 
-namespace SuperCharacterController
+namespace GameClient.SuperCharacter
 {
     public static class SuperCollider
     {
@@ -68,13 +68,14 @@ namespace SuperCharacterController
             // Cache the collider transform
             var ct = colliderEntity.Transform;
 
-            Vector3 collider_center = Vector3.Zero; //?
+            //Vector3 collider_center = Vector3.Zero; //?
 
             p = to - (ct.Position + collider.Radius);
             p.Normalize();
 
             p *= collider.Radius * ct.Scale.X;
-            p += ct.Position + collider_center;
+            //p += ct.Position + collider_center;
+            p += ct.Position;
 
             return p;
         }

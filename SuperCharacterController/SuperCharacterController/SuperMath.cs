@@ -1,7 +1,8 @@
-﻿using Stride.Core.Mathematics;
+﻿using GameClient.Tools;
+using Stride.Core.Mathematics;
 using System;
 
-namespace SuperCharacterController
+namespace GameClient.SuperCharacter
 {
     public static class SuperMath
     {
@@ -53,7 +54,7 @@ namespace SuperCharacterController
         /// </summary>
         public static bool Timer(float startTime, float duration)
         {
-            return Math3d.TimeSeconds > startTime + duration;
+            return Time.TimeSeconds > startTime + duration;
         }
 
         public static float ClampAngle(float angle)

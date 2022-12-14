@@ -1,6 +1,6 @@
 ﻿using Stride.Engine;
 
-namespace SuperCharacterController
+namespace GameClient.SuperCharacter
 {
     /// <summary>
     /// Extend this class to add in any further data you want to be able to access

@@ -6,7 +6,7 @@ using Stride.Rendering;
 using System;
 using Stride.Rendering.Rendering.MeshDataTool;
 
-namespace SuperCharacterController
+namespace GameClient.SuperCharacter
 {
     /// <summary>
     /// Recursively paritions a mesh's vertices to allow to more quickly
