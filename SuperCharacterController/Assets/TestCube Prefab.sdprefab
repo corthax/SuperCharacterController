@@ -1,0 +1,41 @@
+!PrefabAsset
+Id: 891f979e-9561-47a7-9436-1ff016b268df
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+Hierarchy:
+    RootParts:
+        - ref!! 35ffeb2b-5085-49a0-9879-7091981c82cd
+    Parts:
+        -   Entity:
+                Id: 35ffeb2b-5085-49a0-9879-7091981c82cd
+                Name: TestCube
+                Components:
+                    236f7c6df132b0bb795a835c30b85932: !TransformComponent
+                        Id: 9bf24e88-9837-498b-ae13-60d43d20d84c
+                        Position: {X: 0.387044, Y: 0.22728682, Z: 0.6991718}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    4f67cc7639c47e2728aa7f028b333688: !ModelComponent
+                        Id: 520a22c2-399b-4bcc-b792-1e5456f1d819
+                        Model: badf0d94-ac3b-45d8-b31a-5b8d8ba84dcf:TestCube
+                        Materials: {}
+                    6d637c66acbb078fc389dd3c259ae2a7: !StaticColliderComponent
+                        Id: d3ca090f-75ff-469f-9414-c59bb5cac00a
+                        CanSleep: true
+                        Restitution: 0.0
+                        Friction: 0.5
+                        RollingFriction: 0.0
+                        CcdMotionThreshold: 0.0
+                        CcdSweptSphereRadius: 0.0
+                        IsTrigger: false
+                        AlwaysUpdateNaviMeshCache: false
+                        ColliderShapes:
+                            d8823dc80d3d7801fc21a2d4499a52a6: !StaticMeshColliderShapeDesc
+                                Model: badf0d94-ac3b-45d8-b31a-5b8d8ba84dcf:TestCube
+                    bcf00853d08f9f4f84edd62dd99ea169: !SCC.SuperCharacter.BSPTree,SuperCharacterController
+                        Id: f52806f6-c038-4555-afd6-1d044801df22
+                    332f2c9da35972120754da0b16278b16: !SCC.SuperCharacter.SuperCollisionType,SuperCharacterController
+                        Id: 1fee0eb1-783b-43a5-b1e2-0211101e98fe
+                        StandAngle: 40.0
+                        SlopeLimit: 40.0

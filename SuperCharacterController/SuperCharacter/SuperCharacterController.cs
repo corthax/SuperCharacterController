@@ -1,4 +1,4 @@
-﻿using GameClient.Tools;
+﻿using SCC.Tools;
 using Stride.Core;
 using Stride.Core.Mathematics;
 using Stride.Engine;
@@ -6,7 +6,7 @@ using Stride.Physics;
 using System;
 using System.Collections.Generic;
 
-namespace GameClient.SuperCharacter
+namespace SCC.SuperCharacter
 {
     /// <summary>
     /// Custom character controller, to be used by attaching the component to an object
