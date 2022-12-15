@@ -1,15 +1,15 @@
 !Model
-Id: badf0d94-ac3b-45d8-b31a-5b8d8ba84dcf
+Id: 2f2fb7d2-f741-4c1f-9673-33d3ef4e76a5
 SerializedVersion: {Stride: 2.0.0.0}
 Tags: []
-Source: !file TestCube.fbx
+Source: !file test.fbx
 Skeleton: null
 PivotPosition: {X: 0.0, Y: 0.0, Z: 0.0}
 Materials:
-    c020d8594a79ce71bae06b77b2e3097d:
+    60b14a21a20f5a3963f204f6c9bf7c01:
         Name: Material
         MaterialInstance:
             Material: 8b27e561-5620-4023-9885-dfb0f4c3215a:Ground Material
 Modifiers: {}
 ~SourceHashes:
-    7e8f4f5db4284d864c245f6bbfd9f2bd~../../../ember/Assets/Maps/Objects/TestCube.fbx: e3b7c62ca89739f80b37355a0ea75302
+    a982af1db428b3881505b5aed7d4f934~../../../ember/Assets/Maps/test.fbx: 25af4f61dc4ce279156f9ae26297e813

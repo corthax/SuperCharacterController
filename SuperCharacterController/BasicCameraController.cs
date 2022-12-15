@@ -105,32 +105,32 @@ namespace SCC
                 {
                     if (Input.IsKeyDown(Keys.Up))
                     {
-                        character.Entity.Transform.Position -= Vector3.UnitX * 0.1f;
+                        character.Entity.Transform.Position -= Vector3.UnitX * 0.2f;
                     }
 
                     if (Input.IsKeyDown(Keys.Down))
                     {
-                        character.Entity.Transform.Position += Vector3.UnitX * 0.1f;
+                        character.Entity.Transform.Position += Vector3.UnitX * 0.2f;
                     }
 
                     if (Input.IsKeyDown(Keys.Left))
                     {
-                        character.Entity.Transform.Position += Vector3.UnitZ * 0.1f;
+                        character.Entity.Transform.Position += Vector3.UnitZ * 0.2f;
                     }
 
                     if (Input.IsKeyDown(Keys.Right))
                     {
-                        character.Entity.Transform.Position -= Vector3.UnitZ * 0.1f;
+                        character.Entity.Transform.Position -= Vector3.UnitZ * 0.2f;
                     }
 
                     if (Input.IsKeyDown(Keys.Space))
                     {
-                        character.Entity.Transform.Position += Vector3.UnitY * 0.2f;
+                        character.Entity.Transform.Position += Vector3.UnitY * 0.3f;
                     }
 
                     if (Input.IsKeyDown(Keys.LeftShift))
                     {
-                        character.Entity.Transform.Position -= Vector3.UnitY * 0.2f;
+                        character.Entity.Transform.Position -= Vector3.UnitY * 0.3f;
                     }
 
                     // Move with keyboard

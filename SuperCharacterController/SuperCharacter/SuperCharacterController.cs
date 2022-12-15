@@ -64,9 +64,9 @@ namespace SCC.SuperCharacter
         [DataMemberIgnore]
         private readonly CollisionSphere[] spheres =
             new CollisionSphere[3] {
-            new CollisionSphere(0.0f, true, false),
+            new CollisionSphere(-0.5f, true, false),
             new CollisionSphere(0.5f, false, false),
-            new CollisionSphere(1.0f, false, true),
+            new CollisionSphere(1.5f, false, true),
             };
 
         [DataMemberIgnore] public PhysicsComponent ownCollider;
@@ -259,7 +259,7 @@ namespace SCC.SuperCharacter
         bool SlopeLimit()
         {
             Vector3 n = CurrentGround.PrimaryNormal();
-            float a = Math3d.Vector3_Angle(n, Up);
+            float a = Math3d.DotProductAngle(n, Up);
 
             if (a > CurrentGround.MySuperCollisionType.SlopeLimit)
             {
@@ -269,7 +269,7 @@ namespace SCC.SuperCharacter
                 Vector3 r = Vector3.Cross(n, Down);
                 Vector3 v = Vector3.Cross(r, n);
 
-                float angle = Math3d.Vector3_Angle(absoluteMoveDirection, v);
+                float angle = Math3d.DotProductAngle(absoluteMoveDirection, v);
 
                 if (angle <= 90.0f)
                     return false;
@@ -296,92 +296,6 @@ namespace SCC.SuperCharacter
 
             return false;
         }
-
-        // unity physics adaptation
-
-        /*public static bool Physics_CapsuleCast(Vector3 start, Vector3 end, float radius, Vector3 direction, out HitResult hitInfo, float maxDistance, CollisionFilterGroupFlags layerMask)
-        {
-            var simulation = Math3d.Instance.GetSimulation();
-            if (simulation == null) { Math3d.LogError("Simulation is null!"); hitInfo = new(); return false; }
-
-            CapsuleColliderShape shape = new(false, radius, Vector3.Distance(start, end), ShapeOrientation.UpY);
-            var pos = (start + end) * .5f; // capsule center
-            var pos1 = Matrix.Translation(pos);
-            var pos2 = Matrix.Translation(Vector3.Add(pos, Vector3.Multiply(direction, maxDistance)));
-            hitInfo = simulation.ShapeSweep(shape, pos1, pos2, CollisionFilterGroups.DefaultFilter, layerMask);
-            return hitInfo.Succeeded;
-        }
-
-        public static List<HitResult> Physics_OverlapSphere(Vector3 position, float radius, CollisionFilterGroupFlags layerMask)
-        {
-            var simulation = Math3d.Instance.GetSimulation();
-            if (simulation == null) { Math3d.LogError("Simulation is null!"); return new List<HitResult>(); }
-
-            SphereColliderShape shape = new(false, radius);
-            var pos1 = Matrix.Translation(position);
-            var pos2 = Matrix.Translation(Vector3.Add(position, SWEEP_EPSILON));
-            List<HitResult> hitInfo = new();
-            simulation.ShapeSweepPenetrating(shape, pos1, pos2, hitInfo, CollisionFilterGroups.DefaultFilter, layerMask);
-            //Math3d.LogInfo($"Sphere overlap {pos1.TranslationVector} : hit '{hitInfo.Count > 0}'");
-            return hitInfo;
-        }
-
-        public static bool Physics_SphereCast(Ray ray, float radius, float maxDistance, CollisionFilterGroupFlags layerMask)
-        {
-            var simulation = Math3d.Instance.GetSimulation();
-            if (simulation == null) { Math3d.LogError("Simulation is null!"); return false; }
-
-            SphereColliderShape shape = new(false, radius);
-            var pos1 = Matrix.Translation(ray.Position);
-            var pos2 = Matrix.Translation(Vector3.Add(ray.Position, Vector3.Multiply(ray.Direction, maxDistance)));
-            return simulation.ShapeSweep(shape, pos1, pos2, CollisionFilterGroups.DefaultFilter, layerMask).Succeeded;
-        }
-
-        public static void Physics_SphereCast(Ray ray, float radius, out HitResult hitInfo, float maxDistance, CollisionFilterGroupFlags layerMask)
-        {
-            var simulation = Math3d.Instance.GetSimulation();
-            if (simulation == null) { Math3d.LogError("Simulation is null!"); hitInfo = new(); return; }
-
-            SphereColliderShape shape = new(false, radius);
-            var pos1 = Matrix.Translation(ray.Position);
-            var pos2 = Matrix.Translation(Vector3.Add(ray.Position, Vector3.Multiply(ray.Direction, maxDistance)));
-            hitInfo = simulation.ShapeSweep(shape, pos1, pos2, CollisionFilterGroups.DefaultFilter, layerMask);
-        }
-
-        public static bool Physics_SphereCast(Vector3 origin, float radius, Vector3 direction, out HitResult hitInfo, float maxDistance, CollisionFilterGroupFlags layerMask)
-        {
-            var simulation = Math3d.Instance.GetSimulation();
-            if (simulation == null) { Math3d.LogError("Simulation is null!"); hitInfo = new(); return false; }
-
-            SphereColliderShape shape = new(false, radius);
-            var pos1 = Matrix.Translation(origin);
-            var pos2 = Matrix.Translation(Vector3.Add(origin, Vector3.Multiply(direction, maxDistance)));
-            hitInfo = simulation.ShapeSweep(shape, pos1, pos2, CollisionFilterGroups.DefaultFilter, layerMask);
-            //Math3d.LogInfo($"Sphere sweep from {pos1.TranslationVector} to {pos2.TranslationVector} : hit '{hitInfo.Succeeded}'");
-            return hitInfo.Succeeded;
-        }
-
-        public static bool Physics_CheckSphere(Vector3 origin, float radius, CollisionFilterGroupFlags layerMask)
-        {
-            var simulation = Math3d.Instance.GetSimulation();
-            if (simulation == null) { Math3d.LogError("Simulation is null!"); return false; }
-
-            SphereColliderShape shape = new(false, radius);
-            var pos1 = Matrix.Translation(origin);
-            var pos2 = Matrix.Translation(Vector3.Add(origin, SWEEP_EPSILON));
-            return simulation.ShapeSweep(shape, pos1, pos2, CollisionFilterGroups.DefaultFilter, layerMask).Succeeded;
-        }
-
-        public static bool Physics_Raycast(Vector3 origin, Vector3 direction, out HitResult hitInfo, float maxDistance, CollisionFilterGroupFlags layerMask)
-        {
-            var simulation = Math3d.Instance.GetSimulation();
-            if (simulation == null) { Math3d.LogError("Simulation is null!"); hitInfo = new(); return false; }
-
-            hitInfo = simulation.Raycast(origin, Vector3.Add(origin, Vector3.Multiply(direction, maxDistance)), CollisionFilterGroups.DefaultFilter, layerMask);
-            return hitInfo.Succeeded;
-        }*/
-
-        // ---
 
         void ClampToGround()
         {
@@ -561,12 +475,12 @@ namespace SCC.SuperCharacter
 
         public bool PointBelowHead(Vector3 point)
         {
-            return Math3d.Vector3_Angle(point - SpherePosition(Head), Up) > 89.0f;
+            return Math3d.DotProductAngle(point - SpherePosition(Head), Up) > 89.0f;
         }
 
         public bool PointAboveFeet(Vector3 point)
         {
-            return Math3d.Vector3_Angle(point - SpherePosition(Feet), Down) > 89.0f;
+            return Math3d.DotProductAngle(point - SpherePosition(Feet), Down) > 89.0f;
         }
 
         public void IgnoreCollider(PhysicsComponent col)
@@ -665,7 +579,9 @@ namespace SCC.SuperCharacter
 
                     // If we are standing on a perfectly flat surface, we cannot be either on an edge,
                     // On a slope or stepping off a ledge
-                    if (Vector3.Distance(Math3d.ProjectPointOnPlane(controller.Up, controller.Entity.Transform.Position, hit.Point), controller.Entity.Transform.Position) < TINY_TOLERANCE)
+                    if (Vector3.Distance(
+                        Math3d.ProjectPointOnPlane(controller.Up, controller.Entity.Transform.Position, hit.Point), 
+                        controller.Entity.Transform.Position) < TINY_TOLERANCE)
                     {
                         return true;
                     }
@@ -673,7 +589,9 @@ namespace SCC.SuperCharacter
                     // As we are standing on an edge, we need to retrieve the normals of the two
                     // faces on either side of the edge and store them in nearHit and farHit
 
-                    Vector3 toCenter = Math3d.ProjectVectorOnPlane(up, Vector3.Normalize(controller.Entity.Transform.Position - hit.Point) * TINY_TOLERANCE);
+                    Vector3 toCenter = Math3d.ProjectVectorOnPlane(
+                        up, 
+                        Vector3.Normalize(controller.Entity.Transform.Position - hit.Point) * TINY_TOLERANCE);
 
                     Vector3 awayFromCenter = Quaternion.RotationAxis(Vector3.Cross(toCenter, up), -80.0f) * -toCenter;
 
@@ -688,7 +606,7 @@ namespace SCC.SuperCharacter
 
                     // If we are currently standing on ground that should be counted as a wall,
                     // we are likely flush against it on the ground. Retrieve what we are standing on
-                    if (Math3d.Vector3_Angle(hit.Normal, up) > superColType.StandAngle)
+                    if (Math3d.DotProductAngle(hit.Normal, up) > superColType.StandAngle)
                     {
                         // Retrieve a vector pointing down the slope
                         Vector3 r = Vector3.Cross(hit.Normal, down);
@@ -713,7 +631,8 @@ namespace SCC.SuperCharacter
                     // If we are currently standing on a ledge then the face nearest the center of the
                     // controller should be steep enough to be counted as a wall. Retrieve the ground
                     // it is connected to at it's base, if there exists any
-                    if (Math3d.Vector3_Angle(nearHit.Normal, up) > superColType.StandAngle || Vector3.Distance(nearPoint, nearHit.Point) > TOLERANCE)
+                    if (Math3d.DotProductAngle(nearHit.Normal, up) > superColType.StandAngle || 
+                        Vector3.Distance(nearPoint, nearHit.Point) > TOLERANCE)
                     {
                         var col = nearHit.Collider.Entity.GetOrCreate<SuperCollisionType>();
 
@@ -721,7 +640,7 @@ namespace SCC.SuperCharacter
 
                         // We contacted the wall of the ledge, rather than the landing. Raycast down
                         // the wall to retrieve the proper landing
-                        if (Math3d.Vector3_Angle(nearHit.Normal, up) > col.StandAngle)
+                        if (Math3d.DotProductAngle(nearHit.Normal, up) > col.StandAngle)
                         {
                             // Retrieve a vector pointing down the slope
                             Vector3 r = Vector3.Cross(nearHit.Normal, down);
@@ -790,9 +709,11 @@ namespace SCC.SuperCharacter
                 }
 
                 // Check if we are flush against a wall
-                if (farGround != null && Math3d.Vector3_Angle(farGround.Normal, controller.Up) > MySuperCollisionType.StandAngle)
+                if (farGround != null && Math3d.DotProductAngle(farGround.Normal, controller.Up) > MySuperCollisionType.StandAngle)
                 {
-                    if (flushGround != null && Math3d.Vector3_Angle(flushGround.Normal, controller.Up) < MySuperCollisionType.StandAngle && flushGround.Distance < distance)
+                    if (flushGround != null && 
+                        Math3d.DotProductAngle(flushGround.Normal, controller.Up) < MySuperCollisionType.StandAngle && 
+                        flushGround.Distance < distance)
                     {
                         groundNormal = flushGround.Normal;
                         return true;
@@ -805,14 +726,17 @@ namespace SCC.SuperCharacter
                 if (farGround != null && !OnSteadyGround(farGround.Normal, primaryGround.Point))
                 {
                     // Check if we are walking onto steadier ground
-                    if (nearGround != null && nearGround.Distance < distance && Math3d.Vector3_Angle(nearGround.Normal, controller.Up) < MySuperCollisionType.StandAngle && !OnSteadyGround(nearGround.Normal, nearGround.Point))
+                    if (nearGround != null && nearGround.Distance < distance && 
+                        Math3d.DotProductAngle(nearGround.Normal, controller.Up) < MySuperCollisionType.StandAngle && 
+                        !OnSteadyGround(nearGround.Normal, nearGround.Point))
                     {
                         groundNormal = nearGround.Normal;
                         return true;
                     }
 
                     // Check if we are on a step or stair
-                    if (stepGround != null && stepGround.Distance < distance && Math3d.Vector3_Angle(stepGround.Normal, controller.Up) < MySuperCollisionType.StandAngle)
+                    if (stepGround != null && stepGround.Distance < distance && 
+                        Math3d.DotProductAngle(stepGround.Normal, controller.Up) < MySuperCollisionType.StandAngle)
                     {
                         groundNormal = stepGround.Normal;
                         return true;
@@ -836,7 +760,7 @@ namespace SCC.SuperCharacter
 
             private bool OnSteadyGround(Vector3 normal, Vector3 point)
             {
-                float angle = Math3d.Vector3_Angle(normal, controller.Up);
+                float angle = Math3d.DotProductAngle(normal, controller.Up);
                 float angleRatio = angle / groundingUpperBoundAngle;
                 float distanceRatio = MathUtil.Lerp(groundingMinPercentFromcenter, groundingMaxPercentFromCenter, angleRatio);
                 Vector3 p = Math3d.ProjectPointOnPlane(controller.Up, controller.Entity.Transform.Position, point);
@@ -865,7 +789,7 @@ namespace SCC.SuperCharacter
             /// <returns>True if the raycast is successful</returns>
             private bool SimulateSphereCast(Vector3 groundNormal, out HitResult hit, out float distance)
             {
-                float groundAngle = Math3d.Vector3_Angle(groundNormal, controller.Up) * (MathF.PI * 2 / 360);
+                float groundAngle = Math3d.DotProductAngle(groundNormal, controller.Up) * Math3d.Deg2Rad;
                 Vector3 secondaryOrigin = controller.Entity.Transform.Position + controller.Up * TOLERANCE;
 
                 if (!MathUtil.NearEqual(groundAngle, 0))
@@ -877,7 +801,9 @@ namespace SCC.SuperCharacter
                     Vector3 r2 = Vector3.Cross(groundNormal, controller.Down);
                     Vector3 v2 = -Vector3.Cross(r2, groundNormal);
 
-                    secondaryOrigin += Vector3.Normalize(Math3d.ProjectVectorOnPlane(controller.Up, v2)) * horizontal + controller.Up * vertical;
+                    secondaryOrigin += Vector3.Normalize(
+                        Math3d.ProjectVectorOnPlane(controller.Up, v2)) * horizontal + 
+                        controller.Up * vertical;
                 }
 
                 if (Physics.Raycast(secondaryOrigin, controller.Down, out hit, CAST_DISTANCE, walkable))

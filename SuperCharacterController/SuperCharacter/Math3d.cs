@@ -312,10 +312,10 @@ namespace SCC.SuperCharacter
             return dot;
         }
 
-        public static float Vector3_Angle(Vector3 from, Vector3 to)
+        /*public static float Vector3_Angle(Vector3 from, Vector3 to)
         {
-            return MathF.Acos(Math.Clamp(Vector3.Dot(Vector3.Normalize(from), Vector3.Normalize(to)), -1f, 1f)) * 57.29578f;
-        }
+            //return MathF.Acos(Math.Clamp(Vector3.Dot(Vector3.Normalize(from), Vector3.Normalize(to)), -1f, 1f)) * 57.29578f;
+        }*/
 
         public static float SignedVectorAngle(Vector3 referenceVector, Vector3 otherVector, Vector3 normal)
         {
@@ -326,7 +326,7 @@ namespace SCC.SuperCharacter
             perpVector = Vector3.Cross(normal, referenceVector);
 
             //Now calculate the dot product between the perpendicular vector (perpVector) and the other input vector
-            angle = Vector3_Angle(referenceVector, otherVector);
+            angle = DotProductAngle(referenceVector, otherVector);
             angle *= MathF.Sign(Vector3.Dot(perpVector, otherVector));
 
             return angle;
@@ -411,23 +411,11 @@ namespace SCC.SuperCharacter
             return q * Vector3.UnitX;
         }
 
-        public static Vector4 Matrix4x4_GetColumn(Matrix m, int index)
-        {
-            return index switch
-            {
-                0 => new Vector4(m.M11, m.M21, m.M31, m.M41),
-                1 => new Vector4(m.M12, m.M22, m.M32, m.M42),
-                2 => new Vector4(m.M13, m.M23, m.M33, m.M43),
-                3 => new Vector4(m.M14, m.M24, m.M34, m.M44),
-                _ => throw new IndexOutOfRangeException($"Invalid column index! {index}"),
-            };
-        }
-
         //Gets a quaternion from a matrix
         public static Quaternion QuaternionFromMatrix(Matrix m)
         {
-            var vF = (Vector3)Matrix4x4_GetColumn(m, 2);
-            var vU = (Vector3)Matrix4x4_GetColumn(m, 1);
+            var vF = (Vector3)Matrix_GetColumn(m, 2);
+            var vU = (Vector3)Matrix_GetColumn(m, 1);
             return Quaternion.LookRotation(vF, vU);
         }
 
@@ -435,7 +423,7 @@ namespace SCC.SuperCharacter
         public static Vector3 PositionFromMatrix(Matrix m)
         {
 
-            Vector4 vector4Position = Matrix4x4_GetColumn(m, 3);
+            Vector4 vector4Position = Matrix_GetColumn(m, 3);
             return new Vector3(vector4Position.X, vector4Position.Y, vector4Position.Z);
         }
 
@@ -696,6 +684,18 @@ namespace SCC.SuperCharacter
         }
 
         // matrix math
+
+        public static Vector4 Matrix_GetColumn(Matrix m, int index)
+        {
+            return index switch
+            {
+                0 => new Vector4(m.M11, m.M21, m.M31, m.M41),
+                1 => new Vector4(m.M12, m.M22, m.M32, m.M42),
+                2 => new Vector4(m.M13, m.M23, m.M33, m.M43),
+                3 => new Vector4(m.M14, m.M24, m.M34, m.M44),
+                _ => throw new IndexOutOfRangeException($"Invalid column index! {index}"),
+            };
+        }
 
         /// <summary>
         /// Creates a rotation matrix. Assumes unit quaternion.

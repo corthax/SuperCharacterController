@@ -9,14 +9,14 @@ namespace SCC.SuperCharacter
 
         public static Vector3 ClampAngleOnPlane(Vector3 origin, Vector3 direction, float angle, Vector3 planeNormal)
         {
-            float a = Math3d.Vector3_Angle(origin, direction);
+            float a = Math3d.DotProductAngle(origin, direction);
 
             if (a < angle)
                 return direction;
 
             Vector3 r = Vector3.Cross(planeNormal, origin);
 
-            float s = Math3d.Vector3_Angle(r, direction);
+            float s = Math3d.DotProductAngle(r, direction);
             float rotationAngle = (s < 90 ? 1 : -1) * angle;
             //Quaternion rotation = Quaternion.AngleAxis(rotationAngle, planeNormal);
             Quaternion rotation = Quaternion.RotationAxis(planeNormal, rotationAngle);
@@ -46,7 +46,7 @@ namespace SCC.SuperCharacter
         public static bool PointAbovePlane(Vector3 planeNormal, Vector3 planePoint, Vector3 point)
         {
             Vector3 direction = point - planePoint;
-            return Math3d.Vector3_Angle(direction, planeNormal) < 90;
+            return Math3d.DotProductAngle(direction, planeNormal) < 90;
         }
 
         /// <summary>

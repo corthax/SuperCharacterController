@@ -15,6 +15,7 @@ Hierarchy:
         - ref!! 4913f304-2194-4081-a888-4bb185123a85
         - ref!! 11743659-0453-43de-9f5c-f148e4b5ce3f
         - ref!! e6238765-b5df-4ad3-91ba-1330b60e2244
+        - ref!! f67d6613-4705-48ec-a950-a4fe79d863ce
     Parts:
         -   Folder: null
             Entity:
@@ -23,7 +24,7 @@ Hierarchy:
                 Components:
                     236f7c6df132b0bb795a835c30b85932: !TransformComponent
                         Id: 2edd5d97-8ce7-47af-9d46-ac8d1a9e7ab6
-                        Position*: {X: 0.387044, Y: 3.83515, Z: 8.705047}
+                        Position*: {X: 0.387044, Y: 5.2438955, Z: 8.705047}
                         Rotation*: {X: 0.70710677, Y: 0.0, Z: 0.0, W: 0.70710677}
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children: {}
@@ -86,7 +87,7 @@ Hierarchy:
                 Components:
                     236f7c6df132b0bb795a835c30b85932: !TransformComponent
                         Id: 26946290-c60f-44ed-a26b-1fc46f69622e
-                        Position*: {X: 0.387044, Y: 1.9791619, Z: 6.8932056}
+                        Position*: {X: 0.387044, Y: 3.2616415, Z: 6.8932056}
                         Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children: {}
@@ -158,14 +159,14 @@ Hierarchy:
                         Materials: {}
                     e0022f9ea99736c608fccc4e6bdb79bd: !SCC.SuperCharacter.SuperCharacterController,SuperCharacterController
                         Id: 37d69a34-d22d-4f3c-b3a5-cd1f16740af9
-                        WalkableGroups: StaticFilter
-                        WalkableFlags: DefaultFilter, StaticFilter
+                        WalkableGroups: DefaultFilter
+                        WalkableFlags: AllFilter
                         ManualUpdateOnly: false
                         FixedTimeStep: false
                         FixedUpdatesPerSecond: 40
-                        ClampToMovingGround: false
+                        ClampToMovingGround: true
                         GroundClamping: false
-                        SlopeLimiting: false
+                        SlopeLimiting: true
         -   Entity:
                 Id: c65b3f44-325f-49b1-8237-3beb60b420d4
                 Name: Skybox
@@ -204,7 +205,7 @@ Hierarchy:
                 Components:
                     236f7c6df132b0bb795a835c30b85932: !TransformComponent
                         Id: 0a8b2ab8-dd53-49fd-8c79-404c15ee8f3e
-                        Position*: {X: 0.387044, Y: 1.0321046, Z: 3.5698378}
+                        Position*: {X: 0.28439903, Y: 2.0728765, Z: 3.5698378}
                         Rotation*: {X: -0.25881904, Y: 0.0, Z: 0.0, W: 0.9659258}
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children: {}
@@ -241,7 +242,7 @@ Hierarchy:
                 Components:
                     236f7c6df132b0bb795a835c30b85932: !TransformComponent
                         Id: 943c1a3b-466f-4757-9484-de72127d2074
-                        Position: {X: 0.387044, Y: 0.22728682, Z: 0.6991718}
+                        Position*: {X: 0.23629677, Y: 0.90471053, Z: 0.16524185}
                         Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children: {}
@@ -272,3 +273,36 @@ Hierarchy:
                 BasePartAsset: 891f979e-9561-47a7-9436-1ff016b268df:TestCube Prefab
                 BasePartId: 35ffeb2b-5085-49a0-9879-7091981c82cd
                 InstanceId: 830af53f-c24d-4c7f-9252-7d25f7983f83
+        -   Entity:
+                Id: f67d6613-4705-48ec-a950-a4fe79d863ce
+                Name: test
+                Components:
+                    bd9ac41af6af460d0baccb2ca21d6bbd: !TransformComponent
+                        Id: 49d0cf11-ffcb-4ef1-91ee-f3729badea5e
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    0af494c92e3d4fe6b356a00797f8a8fc: !ModelComponent
+                        Id: 280561d2-b963-409d-9ad5-b686ada67318
+                        Model: 2f2fb7d2-f741-4c1f-9673-33d3ef4e76a5:test
+                        Materials: {}
+                    2cd767c845bd42523975d60f0cd82302: !StaticColliderComponent
+                        Id: c1188a78-29c0-4b54-bd77-b28eae3935c5
+                        CanSleep: false
+                        Restitution: 0.0
+                        Friction: 0.5
+                        RollingFriction: 0.0
+                        CcdMotionThreshold: 0.0
+                        CcdSweptSphereRadius: 0.0
+                        IsTrigger: false
+                        AlwaysUpdateNaviMeshCache: false
+                        ColliderShapes:
+                            e4aa68b6103906f0c939ac952e0d38b0: !StaticMeshColliderShapeDesc
+                                Model: 2f2fb7d2-f741-4c1f-9673-33d3ef4e76a5:test
+                    fa578e1d6a7f00d33354df3240dfe034: !SCC.SuperCharacter.BSPTree,SuperCharacterController
+                        Id: b24fdbff-6f15-47fc-ab05-08093ec20580
+                    f9bca8522d8af0e97d4ba49f97583b1a: !SCC.SuperCharacter.SuperCollisionType,SuperCharacterController
+                        Id: 1accd11d-9ebb-4924-87c7-68bc195a7a3d
+                        StandAngle: 40.0
+                        SlopeLimit: 40.0
