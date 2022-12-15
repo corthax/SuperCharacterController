@@ -127,6 +127,11 @@ namespace SCC.SuperCharacter
             }
         }*/
 
+        /// <summary>
+        /// YOUR SuperStateMachine CONTROLLER HERE
+        /// </summary>
+        public BasicCameraController _ctrl; 
+
         public override void Start()
         {
             Log.Info("SCC start");
@@ -218,7 +223,8 @@ namespace SCC.SuperCharacter
 
             //Entity.Transform.Position += debugMove * DeltaTime;
 
-            //gameObject.SendMessage("SuperUpdate", SendMessageOptions.DontRequireReceiver);
+            //gameObject.SendMessage("SuperUpdate", SendMessageOptions.DontRequireReceiver)
+            _ctrl.SuperUpdate(); // SuperStateMachine
 
             CollisionData.Clear();
 

@@ -107,10 +107,10 @@ namespace SCC.SuperCharacter
 
         public override void Update()
         {
-            GlobalSuperUpdate();
+            //SuperUpdate();
         }
 
-        private void GlobalSuperUpdate()
+        public void SuperUpdate()
         {
             EarlyGlobalSuperUpdate();
 

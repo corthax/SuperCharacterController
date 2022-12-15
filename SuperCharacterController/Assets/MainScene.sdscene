@@ -161,6 +161,7 @@ Hierarchy:
                         Id: 37d69a34-d22d-4f3c-b3a5-cd1f16740af9
                         WalkableGroups: DefaultFilter
                         WalkableFlags: AllFilter
+                        _ctrl: ref!! fdff2b1a-c06e-422f-b993-25035110791e
                         ManualUpdateOnly: false
                         FixedTimeStep: false
                         FixedUpdatesPerSecond: 40
@@ -186,7 +187,7 @@ Hierarchy:
                             Skybox: 2d854138-5834-4677-a8c0-163fdc92e9cf:Skybox
         -   Entity:
                 Id: d6af554e-8af6-4606-9e62-2981ab2bd83b
-                Name: SCC
+                Name: Instances
                 Components:
                     0dc2a2931e4637d679910a23a531ff79: !TransformComponent
                         Id: 2fc00eca-88ce-4219-8436-58191383c9dd

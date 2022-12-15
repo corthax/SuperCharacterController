@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Intrinsics.X86;
 using SCC.SuperCharacter;
 using Stride.Core;
 using Stride.Core.Mathematics;
@@ -14,7 +15,7 @@ namespace SCC
     /// The entity can be moved using W, A, S, D, Q and E, arrow keys, a gamepad's left stick or dragging/scaling using multi-touch.
     /// Rotation is achieved using the Numpad, the mouse while holding the right mouse button, a gamepad's right stick, or dragging using single-touch.
     /// </remarks>
-    public class BasicCameraController : SyncScript
+    public class BasicCameraController : SuperStateMachine
     {
         private const float MaximumPitch = MathUtil.PiOverTwo * 0.99f;
 
@@ -22,6 +23,8 @@ namespace SCC
         private Vector3 translation;
         private float yaw;
         private float pitch;
+
+        private float sp;
 
         public bool Gamepad { get; set; } = false;
 
@@ -56,8 +59,19 @@ namespace SCC
 
         public override void Update()
         {
+            //ProcessInput();
+            //UpdateTransform();
+        }
+
+        protected override void EarlyGlobalSuperUpdate()
+        {
             ProcessInput();
             UpdateTransform();
+        }
+
+        protected override void LateGlobalSuperUpdate()
+        {
+
         }
 
         private void ProcessInput()
@@ -101,36 +115,38 @@ namespace SCC
                     }
                 }
 
+                sp = 5 * character.DeltaTime; 
+
                 if (Input.HasKeyboard)
                 {
                     if (Input.IsKeyDown(Keys.Up))
                     {
-                        character.Entity.Transform.Position -= Vector3.UnitX * 0.2f;
+                        character.Entity.Transform.Position -= Vector3.UnitZ * sp;
                     }
 
                     if (Input.IsKeyDown(Keys.Down))
                     {
-                        character.Entity.Transform.Position += Vector3.UnitX * 0.2f;
+                        character.Entity.Transform.Position += Vector3.UnitZ * sp;
                     }
 
                     if (Input.IsKeyDown(Keys.Left))
                     {
-                        character.Entity.Transform.Position += Vector3.UnitZ * 0.2f;
+                        character.Entity.Transform.Position += Vector3.UnitX * sp;
                     }
 
                     if (Input.IsKeyDown(Keys.Right))
                     {
-                        character.Entity.Transform.Position -= Vector3.UnitZ * 0.2f;
+                        character.Entity.Transform.Position -= Vector3.UnitX * sp;
                     }
 
                     if (Input.IsKeyDown(Keys.Space))
                     {
-                        character.Entity.Transform.Position += Vector3.UnitY * 0.3f;
+                        character.Entity.Transform.Position += Vector3.UnitY * sp;
                     }
 
                     if (Input.IsKeyDown(Keys.LeftShift))
                     {
-                        character.Entity.Transform.Position -= Vector3.UnitY * 0.3f;
+                        character.Entity.Transform.Position -= Vector3.UnitY * sp;
                     }
 
                     // Move with keyboard
