@@ -1,13 +1,14 @@
 ﻿using Stride.Core.Mathematics;
 using Stride.Engine;
 using Stride.Core;
+using System.Collections.Generic;
 
-namespace SCC.Tools
+namespace SCC.GameTools
 {
-    public class Tools : StartupScript
+    public class Helper : StartupScript
     {
-        private static Tools instance;
-        public static Tools Instance
+        private static Helper instance;
+        public static Helper Instance
         {
             get { return instance; }
             private set { instance ??= value; }
@@ -15,12 +16,14 @@ namespace SCC.Tools
 
         public override void Start()
         {
+            Priority = -100;
             Instance = this;
         }
 
         public static void LogWarning(string msg) => Instance.Log.Warning(msg);
         public static void LogError(string msg) => Instance.Log.Error(msg);
         public static void LogInfo(string msg) => Instance.Log.Info(msg);
+        public static void LogScreen(string msg, Int2 pos) => Instance.DebugText.Print(msg, pos);
     }
 
     [DataContractIgnore]
@@ -69,12 +72,51 @@ namespace SCC.Tools
         }
 
         public static Vector3 FlattenVector3(Vector3 vector) { return new Vector3(vector.X, 0, vector.Z); }
+
+        /*public static int WordCount(this string str)
+        {
+            return str.Split(new char[] { ' ', '.', '?' },
+                             StringSplitOptions.RemoveEmptyEntries).Length;
+        }*/
+
+        /*public static bool InUse(this ServerRoom room)
+        {
+            return room.hostPlayerID != 0;
+        }*/
     }
 
     [DataContractIgnore]
     public static class Time
     {
-        public static float DeltaTime => (float)Tools.Instance.Game.UpdateTime.Elapsed.TotalSeconds;
-        public static float TimeSeconds => (float)Tools.Instance.Game.UpdateTime.Total.TotalSeconds;
+        public static float DeltaTime => (float)Helper.Instance.Game.UpdateTime.Elapsed.TotalSeconds;
+        public static float TimeSeconds => (float)Helper.Instance.Game.UpdateTime.Total.TotalSeconds;
+    }
+
+    public class NAryDictionary<TKey, TValue> :
+        Dictionary<TKey, TValue>
+    {
+    }
+
+    public class NAryDictionary<TKey1, TKey2, TValue> :
+        Dictionary<TKey1, NAryDictionary<TKey2, TValue>>
+    {
+    }
+
+    public class NAryDictionary<TKey1, TKey2, TKey3, TValue> :
+        Dictionary<TKey1, NAryDictionary<TKey2, TKey3, TValue>>
+    {
+    }
+
+    public static class NAryDictionaryExtensions
+    {
+        public static NAryDictionary<TKey2, TValue> New<TKey1, TKey2, TValue>(this NAryDictionary<TKey1, TKey2, TValue> dictionary)
+        {
+            return new NAryDictionary<TKey2, TValue>();
+        }
+
+        public static NAryDictionary<TKey2, TKey3, TValue> New<TKey1, TKey2, TKey3, TValue>(this NAryDictionary<TKey1, TKey2, TKey3, TValue> dictionary)
+        {
+            return new NAryDictionary<TKey2, TKey3, TValue>();
+        }
     }
 }

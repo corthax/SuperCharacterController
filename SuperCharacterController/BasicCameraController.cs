@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Runtime.Intrinsics.X86;
+using SCC.GameTools;
 using SCC.SuperCharacter;
 using Stride.Core;
 using Stride.Core.Mathematics;
@@ -17,6 +17,13 @@ namespace SCC
     /// </remarks>
     public class BasicCameraController : SuperStateMachine
     {
+        private static BasicCameraController instance;
+        public static BasicCameraController Instance
+        {
+            get { return instance; }
+            private set { instance ??= value; }
+        }
+
         private const float MaximumPitch = MathUtil.PiOverTwo * 0.99f;
 
         private Vector3 upVector;
@@ -44,7 +51,7 @@ namespace SCC
 
         public override void Start()
         {
-            base.Start();
+            Instance = this;
 
             // Default up-direction
             upVector = Vector3.UnitY;
@@ -59,14 +66,46 @@ namespace SCC
 
         public override void Update()
         {
-            //ProcessInput();
-            //UpdateTransform();
+            ProcessInput();
+            UpdateTransform();
+        }
+
+        public void DoSuperUpdate()
+        {
+            SuperUpdate();
         }
 
         protected override void EarlyGlobalSuperUpdate()
         {
-            ProcessInput();
-            UpdateTransform();
+            if (Input.IsKeyDown(Keys.Up))
+            {
+                character.Entity.Transform.Position -= Vector3.UnitZ * sp;
+            }
+
+            if (Input.IsKeyDown(Keys.Down))
+            {
+                character.Entity.Transform.Position += Vector3.UnitZ * sp;
+            }
+
+            if (Input.IsKeyDown(Keys.Left))
+            {
+                character.Entity.Transform.Position -= Vector3.UnitX * sp;
+            }
+
+            if (Input.IsKeyDown(Keys.Right))
+            {
+                character.Entity.Transform.Position += Vector3.UnitX * sp;
+            }
+
+            if (Input.IsKeyDown(Keys.Space))
+            {
+                character.Entity.Transform.Position += Vector3.UnitY * sp;
+            }
+
+            if (Input.IsKeyDown(Keys.LeftShift))
+            {
+                character.Entity.Transform.Position -= Vector3.UnitY * sp;
+            }
         }
 
         protected override void LateGlobalSuperUpdate()
@@ -115,40 +154,10 @@ namespace SCC
                     }
                 }
 
-                sp = 5 * character.DeltaTime; 
+                sp = 5 * Time.DeltaTime; 
 
                 if (Input.HasKeyboard)
                 {
-                    if (Input.IsKeyDown(Keys.Up))
-                    {
-                        character.Entity.Transform.Position -= Vector3.UnitZ * sp;
-                    }
-
-                    if (Input.IsKeyDown(Keys.Down))
-                    {
-                        character.Entity.Transform.Position += Vector3.UnitZ * sp;
-                    }
-
-                    if (Input.IsKeyDown(Keys.Left))
-                    {
-                        character.Entity.Transform.Position += Vector3.UnitX * sp;
-                    }
-
-                    if (Input.IsKeyDown(Keys.Right))
-                    {
-                        character.Entity.Transform.Position -= Vector3.UnitX * sp;
-                    }
-
-                    if (Input.IsKeyDown(Keys.Space))
-                    {
-                        character.Entity.Transform.Position += Vector3.UnitY * sp;
-                    }
-
-                    if (Input.IsKeyDown(Keys.LeftShift))
-                    {
-                        character.Entity.Transform.Position -= Vector3.UnitY * sp;
-                    }
-
                     // Move with keyboard
                     // Forward/Backward
                     if (Input.IsKeyDown(Keys.W))

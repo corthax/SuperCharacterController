@@ -10,8 +10,8 @@ Defaults:
     - !Stride.Assets.EditorSettings,Stride.Assets
         RenderingMode: HDR
     - !Stride.Graphics.RenderingSettings,Stride.Graphics
-        DefaultBackBufferWidth: 720
-        DefaultBackBufferHeight: 360
+        DefaultBackBufferWidth: 1040
+        DefaultBackBufferHeight: 450
         AdaptBackBufferToScreen: true
         DefaultGraphicsProfile: Level_11_0
         ColorSpace: Linear
@@ -22,7 +22,7 @@ Defaults:
     - !Stride.Assets.Textures.TextureSettings,Stride.Assets
         TextureQuality: Fast
     - !Stride.Physics.PhysicsSettings,Stride.Physics
-        Flags: MultiThreaded, UseHardwareWhenPossible, ContinuousCollisionDetection
+        Flags: CollisionsOnly, ContinuousCollisionDetection
         MaxSubSteps: 1
         FixedTimeStep: 0.016666668
 Overrides: []

@@ -4,20 +4,33 @@ SerializedVersion: {Stride: 2.0.0.0}
 Tags: []
 Attributes:
     MicroSurface: !MaterialGlossinessMapFeature
+        Enabled: false
         GlossinessMap: !ComputeFloat
             Value: 0.65
     Diffuse: !MaterialDiffuseMapFeature
         DiffuseMap: !ComputeColor
-            Value: {R: 0.54901963, G: 0.54901963, B: 0.54901963, A: 1.0}
+            Value: {R: 0.0, G: 1.0, B: 0.2874999, A: 1.0}
     DiffuseModel: !MaterialDiffuseLambertModelFeature {}
     Specular: !MaterialMetalnessMapFeature
+        Enabled: false
         MetalnessMap: !ComputeFloat
             Value: 1.0
     SpecularModel: !MaterialSpecularMicrofacetModelFeature
+        Enabled: false
         Fresnel: !MaterialSpecularMicrofacetFresnelSchlick {}
         Visibility: !MaterialSpecularMicrofacetVisibilitySmithSchlickGGX {}
         NormalDistribution: !MaterialSpecularMicrofacetNormalDistributionGGX {}
         Environment: !MaterialSpecularMicrofacetEnvironmentGGXLUT {}
+    Emissive: !MaterialEmissiveMapFeature
+        EmissiveMap: !ComputeTextureColor
+            FallbackValue:
+                Value: {R: 0.375, G: 0.62500006, B: 1.0, A: 1.0}
+            Scale: {X: 1.0, Y: 1.0}
+            Offset: {X: 0.0, Y: 0.0}
+            Enabled: false
+            Swizzle: null
+        Intensity: !ComputeFloat
+            Value: 1.0
     Overrides:
         UVScale: {X: 1.0, Y: 1.0}
 Layers: {}

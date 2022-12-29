@@ -1,5 +1,5 @@
 ﻿using System;
-using Stride.Engine;
+using SCC.GameTools;
 using Stride.Core.Mathematics;
 
 namespace SCC.SuperCharacter
@@ -19,14 +19,11 @@ namespace SCC.SuperCharacter
         //[DataMemberIgnore]
         //public Simulation simulation;
 
-        public const float Deg2Rad = (MathF.PI * 2) / 360;
-        public const float Rad2Deg = 360 / (MathF.PI * 2);
-
         //public override void Start()
         //{
-            //Instance = this;
-            //simulation = this.GetSimulation();
-            //Init();
+        //Instance = this;
+        //simulation = this.GetSimulation();
+        //Init();
         //}
 
         /*public static void Init()
@@ -52,7 +49,7 @@ namespace SCC.SuperCharacter
         public static void LogInfo(string msg) => Instance.Log.Info(msg);*/
 
         //increase or decrease the length of vector by size
-        public static Vector3 AddVectorLength(Vector3 vector, float size)
+        /*public static Vector3 AddVectorLength(Vector3 vector, float size)
         {
             //get the vector length
             float magnitude = vector.Length();
@@ -65,7 +62,7 @@ namespace SCC.SuperCharacter
 
             //scale the vector
             return Vector3.Multiply(vectorNormalized, magnitude);
-        }
+        }*/
 
         //create a vector of direction "vector" with length "size"
         public static Vector3 SetVectorLength(Vector3 vector, float size)
@@ -78,16 +75,16 @@ namespace SCC.SuperCharacter
         }
 
         //caclulate the rotational difference from A to B
-        public static Quaternion SubtractRotation(Quaternion B, Quaternion A)
+        /*public static Quaternion SubtractRotation(Quaternion B, Quaternion A)
         {
             Quaternion C = Quaternion.Invert(A) * B;
             return C;
-        }
+        }*/
 
         //Find the line of intersection between two planes.	The planes are defined by a normal and a point on that plane.
         //The outputs are a point on the line and a vector which indicates it's direction. If the planes are not parallel, 
         //the function outputs true, otherwise false.
-        public static bool PlanePlaneIntersection(out Vector3 linePoint, out Vector3 lineVec, Vector3 plane1Normal, Vector3 plane1Position, Vector3 plane2Normal, Vector3 plane2Position)
+        /*public static bool PlanePlaneIntersection(out Vector3 linePoint, out Vector3 lineVec, Vector3 plane1Normal, Vector3 plane1Position, Vector3 plane2Normal, Vector3 plane2Position)
         {
             linePoint = Vector3.Zero;
 
@@ -120,11 +117,11 @@ namespace SCC.SuperCharacter
             {
                 return false;
             }
-        }
+        }*/
 
         //Get the intersection between a line and a plane. 
         //If the line and plane are not parallel, the function outputs true, otherwise false.
-        public static bool LinePlaneIntersection(out Vector3 intersection, Vector3 linePoint, Vector3 lineVec, Vector3 planeNormal, Vector3 planePoint)
+        /*public static bool LinePlaneIntersection(out Vector3 intersection, Vector3 linePoint, Vector3 lineVec, Vector3 planeNormal, Vector3 planePoint)
         {
             float length;
             float dotNumerator;
@@ -155,12 +152,12 @@ namespace SCC.SuperCharacter
             {
                 return false;
             }
-        }
+        }*/
 
         //Calculate the intersection point of two lines. Returns true if lines intersect, otherwise false.
         //Note that in 3d, two lines do not intersect most of the time. So if the two lines are not in the 
         //same plane, use ClosestPointsOnTwoLines() instead.
-        public static bool LineLineIntersection(out Vector3 intersection, Vector3 linePoint1, Vector3 lineVec1, Vector3 linePoint2, Vector3 lineVec2)
+        /*public static bool LineLineIntersection(out Vector3 intersection, Vector3 linePoint1, Vector3 lineVec1, Vector3 linePoint2, Vector3 lineVec2)
         {
             intersection = Vector3.Zero;
 
@@ -189,12 +186,12 @@ namespace SCC.SuperCharacter
             {
                 return false;
             }
-        }
+        }*/
 
         //Two non-parallel lines which may or may not touch each other have a point on each line which are closest
         //to each other. This function finds those two points. If the lines are not parallel, the function 
         //outputs true, otherwise false.
-        public static bool ClosestPointsOnTwoLines(out Vector3 closestPointLine1, out Vector3 closestPointLine2, Vector3 linePoint1, Vector3 lineVec1, Vector3 linePoint2, Vector3 lineVec2)
+        /*public static bool ClosestPointsOnTwoLines(out Vector3 closestPointLine1, out Vector3 closestPointLine2, Vector3 linePoint1, Vector3 lineVec1, Vector3 linePoint2, Vector3 lineVec2)
         {
             closestPointLine1 = Vector3.Zero;
             closestPointLine2 = Vector3.Zero;
@@ -225,7 +222,7 @@ namespace SCC.SuperCharacter
             {
                 return false;
             }
-        }
+        }*/
 
         //This function returns a point which is a projection from a point to a line.
         //The line is regarded infinite. If the line is finite, use ProjectPointOnLineSegment() instead.
@@ -243,7 +240,7 @@ namespace SCC.SuperCharacter
         //If the projected point lies outside of the line segment, the projected point will 
         //be clamped to the appropriate line edge.
         //If the line is infinite instead of a segment, use ProjectPointOnLine() instead.
-        public static Vector3 ProjectPointOnLineSegment(Vector3 linePoint1, Vector3 linePoint2, Vector3 point)
+        /*public static Vector3 ProjectPointOnLineSegment(Vector3 linePoint1, Vector3 linePoint2, Vector3 point)
         {
             Vector3 vector = linePoint2 - linePoint1;
 
@@ -259,7 +256,7 @@ namespace SCC.SuperCharacter
                 2 => linePoint2,
                 _ => Vector3.Zero, //output is invalid
             };
-        }
+        }*/
 
         //This function returns a point which is a projection from a point to a plane.
         public static Vector3 ProjectPointOnPlane(Vector3 planeNormal, Vector3 planePoint, Vector3 point)
@@ -298,7 +295,7 @@ namespace SCC.SuperCharacter
         //by calculating a vector perpendicular to one of the vectors and using that as a reference. This is because
         //the result of a dot product only has signed information when an angle is transitioning between more or less
         //then 90 degrees.
-        public static float SignedDotProduct(Vector3 vectorA, Vector3 vectorB, Vector3 normal)
+        /*public static float SignedDotProduct(Vector3 vectorA, Vector3 vectorB, Vector3 normal)
         {
             Vector3 perpVector;
             float dot;
@@ -310,14 +307,14 @@ namespace SCC.SuperCharacter
             dot = Vector3.Dot(perpVector, vectorB);
 
             return dot;
-        }
+        }*/
 
         /*public static float Vector3_Angle(Vector3 from, Vector3 to)
         {
-            //return MathF.Acos(Math.Clamp(Vector3.Dot(Vector3.Normalize(from), Vector3.Normalize(to)), -1f, 1f)) * 57.29578f;
+            return MathF.Acos(Math.Clamp(Vector3.Dot(Vector3.Normalize(from), Vector3.Normalize(to)), -1f, 1f)) * 57.29578f;
         }*/
 
-        public static float SignedVectorAngle(Vector3 referenceVector, Vector3 otherVector, Vector3 normal)
+        /*public static float SignedVectorAngle(Vector3 referenceVector, Vector3 otherVector, Vector3 normal)
         {
             Vector3 perpVector;
             float angle;
@@ -330,11 +327,11 @@ namespace SCC.SuperCharacter
             angle *= MathF.Sign(Vector3.Dot(perpVector, otherVector));
 
             return angle;
-        }
+        }*/
 
         //Calculate the angle between a vector and a plane. The plane is made by a normal vector.
         //Output is in radians.
-        public static float AngleVectorPlane(Vector3 vector, Vector3 normal)
+        /*public static float AngleVectorPlane(Vector3 vector, Vector3 normal)
         {
             float dot;
             float angle;
@@ -346,9 +343,14 @@ namespace SCC.SuperCharacter
             angle = MathF.Acos(dot);
 
             return 1.570796326794897f - angle; //90 degrees - angle
-        }
+        }*/
 
-        //Calculate the dot product as an angle
+        /// <summary>
+        /// Calculate the dot product as an angle in radians.
+        /// </summary>
+        /// <param name="vec1"></param>
+        /// <param name="vec2"></param>
+        /// <returns></returns>
         public static float DotProductAngle(Vector3 vec1, Vector3 vec2)
         {
             float dot;
@@ -367,9 +369,20 @@ namespace SCC.SuperCharacter
             return angle;
         }
 
+        /// <summary>
+        /// Calculate and convert the dot product as an angle to degrees.
+        /// </summary>
+        /// <param name="vec1"></param>
+        /// <param name="vec2"></param>
+        /// <returns></returns>
+        public static float Angle(Vector3 vec1, Vector3 vec2)
+        {
+            return DotProductAngle(vec1, vec2) * Mathf.Rad2Deg;
+        }
+
         //Convert a plane defined by 3 points to a plane defined by a vector and a point. 
         //The plane point is the middle of the triangle defined by the 3 points.
-        public static void PlaneFrom3Points(out Vector3 planeNormal, out Vector3 planePoint, Vector3 pointA, Vector3 pointB, Vector3 pointC)
+        /*public static void PlaneFrom3Points(out Vector3 planeNormal, out Vector3 planePoint, Vector3 pointA, Vector3 pointB, Vector3 pointC)
         {
             //Make two vectors from the 3 input points, originating from point A
             Vector3 AB = pointB - pointA;
@@ -391,41 +404,53 @@ namespace SCC.SuperCharacter
             //We could use LineLineIntersection instead of ClosestPointsOnTwoLines but due to rounding errors 
             //this sometimes doesn't work.
             ClosestPointsOnTwoLines(out planePoint, out Vector3 _, middleAB, middleABtoC, middleAC, middleACtoB);
-        }
+        }*/
 
         //Returns the forward vector of a quaternion
-        public static Vector3 GetForwardVector(Quaternion q)
+        /*public static Vector3 GetForwardVector(Quaternion q)
         {
             return q * Vector3.UnitZ;
-        }
+        }*/
 
         //Returns the up vector of a quaternion
-        public static Vector3 GetUpVector(Quaternion q)
+        /*public static Vector3 GetUpVector(Quaternion q)
         {
             return q * Vector3.UnitY;
-        }
+        }*/
 
         //Returns the right vector of a quaternion
-        public static Vector3 GetRightVector(Quaternion q)
+        /*public static Vector3 GetRightVector(Quaternion q)
         {
             return q * Vector3.UnitX;
-        }
+        }*/
+
+        /*public static Vector4 Matrix4x4_GetColumn(Matrix m, int index)
+        {
+            return index switch
+            {
+                0 => new Vector4(m.M11, m.M21, m.M31, m.M41),
+                1 => new Vector4(m.M12, m.M22, m.M32, m.M42),
+                2 => new Vector4(m.M13, m.M23, m.M33, m.M43),
+                3 => new Vector4(m.M14, m.M24, m.M34, m.M44),
+                _ => throw new IndexOutOfRangeException($"Invalid column index! {index}"),
+            };
+        }*/
 
         //Gets a quaternion from a matrix
-        public static Quaternion QuaternionFromMatrix(Matrix m)
+        /*public static Quaternion QuaternionFromMatrix(Matrix m)
         {
-            var vF = (Vector3)Matrix_GetColumn(m, 2);
-            var vU = (Vector3)Matrix_GetColumn(m, 1);
+            var vF = (Vector3)Matrix4x4_GetColumn(m, 2);
+            var vU = (Vector3)Matrix4x4_GetColumn(m, 1);
             return Quaternion.LookRotation(vF, vU);
-        }
+        }*/
 
         //Gets a position from a matrix
-        public static Vector3 PositionFromMatrix(Matrix m)
+        /*public static Vector3 PositionFromMatrix(Matrix m)
         {
 
-            Vector4 vector4Position = Matrix_GetColumn(m, 3);
+            Vector4 vector4Position = Matrix4x4_GetColumn(m, 3);
             return new Vector3(vector4Position.X, vector4Position.Y, vector4Position.Z);
-        }
+        }*/
 
         //This is an alternative for Quaternion.LookRotation. Instead of aligning the forward and up vector of the game 
         //object with the input vectors, a custom direction can be used instead of the fixed forward and up vectors.
@@ -433,7 +458,7 @@ namespace SCC.SuperCharacter
         //customForward and customUp are in object space.
         //Usage: use alignWithVector and alignWithNormal as if you are using the default LookRotation function.
         //Set customForward and customUp to the vectors you wish to use instead of the default forward and up vectors.
-        public static void LookRotationExtended(ref Entity gameObjectInOut, Vector3 alignWithVector, Vector3 alignWithNormal, Vector3 customForward, Vector3 customUp)
+        /*public static void LookRotationExtended(ref Entity gameObjectInOut, Vector3 alignWithVector, Vector3 alignWithNormal, Vector3 customForward, Vector3 customUp)
         {
             //Set the rotation of the destination
             Quaternion rotationA = Quaternion.LookRotation(alignWithVector, alignWithNormal);
@@ -444,7 +469,7 @@ namespace SCC.SuperCharacter
 
             //Calculate the rotation
             gameObjectInOut.Transform.Rotation = rotationA * Quaternion.Invert(rotationB);
-        }
+        }*/
 
         //This function transforms one object as if it was parented to the other.
         //Before using this function, the Init() function must be called
@@ -482,7 +507,7 @@ namespace SCC.SuperCharacter
         //triangleForward, triangleNormal, and trianglePosition are in object space.
         //trianglePosition is the mesh position of the triangle. The effect of the scale of the object is handled automatically.
         //trianglePosition can be set at any position, it does not have to be at a vertex or in the middle of the triangle.
-        public static void PreciseAlign(ref Entity gameObjectInOut, Vector3 alignWithVector, Vector3 alignWithNormal, Vector3 alignWithPosition, Vector3 triangleForward, Vector3 triangleNormal, Vector3 trianglePosition)
+        /*public static void PreciseAlign(ref Entity gameObjectInOut, Vector3 alignWithVector, Vector3 alignWithNormal, Vector3 alignWithPosition, Vector3 triangleForward, Vector3 triangleNormal, Vector3 trianglePosition)
         {
             //Set the rotation.
             LookRotationExtended(ref gameObjectInOut, alignWithVector, alignWithNormal, triangleForward, triangleNormal);
@@ -496,7 +521,7 @@ namespace SCC.SuperCharacter
             //Now transform the object so the triangle lines up correctly.
             //gameObjectInOut.Transform.Translate(translateVector, Space.World);
             gameObjectInOut.Transform.Position += translateVector;
-        }
+        }*/
 
 
         //Convert a position, direction, and normal vector to a transform
@@ -512,7 +537,7 @@ namespace SCC.SuperCharacter
         //Returns 0 if point is on the line segment.
         //Returns 1 if point is outside of the line segment and located on the side of linePoint1.
         //Returns 2 if point is outside of the line segment and located on the side of linePoint2.
-        public static int PointOnWhichSideOfLineSegment(Vector3 linePoint1, Vector3 linePoint2, Vector3 point)
+        /*public static int PointOnWhichSideOfLineSegment(Vector3 linePoint1, Vector3 linePoint2, Vector3 point)
         {
             Vector3 lineVec = linePoint2 - linePoint1;
             Vector3 pointVec = point - linePoint1;
@@ -541,7 +566,7 @@ namespace SCC.SuperCharacter
             {
                 return 1;
             }
-        }
+        }*/
 
         //Returns the pixel distance from the mouse pointer to a line.
         //Alternative for HandleUtility.DistanceToLine(). Works both in Editor mode and Play mode.
@@ -590,7 +615,7 @@ namespace SCC.SuperCharacter
         //Returns true if a line segment (made up of linePoint1 and linePoint2) is fully or partially in a rectangle
         //made up of RectA to RectD. The line segment is assumed to be on the same plane as the rectangle. If the line is 
         //not on the plane, use ProjectPointOnPlane() on linePoint1 and linePoint2 first.
-        public static bool IsLineInRectangle(Vector3 linePoint1, Vector3 linePoint2, Vector3 rectA, Vector3 rectB, Vector3 rectC, Vector3 rectD)
+        /*public static bool IsLineInRectangle(Vector3 linePoint1, Vector3 linePoint2, Vector3 rectA, Vector3 rectB, Vector3 rectC, Vector3 rectD)
         {
             bool pointAInside;
             bool pointBInside = false;
@@ -624,11 +649,11 @@ namespace SCC.SuperCharacter
             {
                 return true;
             }
-        }
+        }*/
 
         //Returns true if "point" is in a rectangle mad up of RectA to RectD. The line point is assumed to be on the same 
         //plane as the rectangle. If the point is not on the plane, use ProjectPointOnPlane() first.
-        public static bool IsPointInRectangle(Vector3 point, Vector3 rectA, Vector3 rectC, Vector3 rectB, Vector3 rectD)
+        /*public static bool IsPointInRectangle(Vector3 point, Vector3 rectA, Vector3 rectC, Vector3 rectB, Vector3 rectD)
         {
             Vector3 vector;
             Vector3 linePoint;
@@ -654,11 +679,11 @@ namespace SCC.SuperCharacter
             float xDistance = vector.Length();
 
             return (xDistance <= width) && (yDistance <= height);
-        }
+        }*/
 
         //Returns true if line segment made up of pointA1 and pointA2 is crossing line segment made up of
         //pointB1 and pointB2. The two lines are assumed to be in the same plane.
-        public static bool AreLineSegmentsCrossing(Vector3 pointA1, Vector3 pointA2, Vector3 pointB1, Vector3 pointB2)
+        /*public static bool AreLineSegmentsCrossing(Vector3 pointA1, Vector3 pointA2, Vector3 pointB1, Vector3 pointB2)
         {
             int sideA;
             int sideB;
@@ -681,28 +706,16 @@ namespace SCC.SuperCharacter
             {
                 return false;
             }
-        }
+        }*/
 
         // matrix math
-
-        public static Vector4 Matrix_GetColumn(Matrix m, int index)
-        {
-            return index switch
-            {
-                0 => new Vector4(m.M11, m.M21, m.M31, m.M41),
-                1 => new Vector4(m.M12, m.M22, m.M32, m.M42),
-                2 => new Vector4(m.M13, m.M23, m.M33, m.M43),
-                3 => new Vector4(m.M14, m.M24, m.M34, m.M44),
-                _ => throw new IndexOutOfRangeException($"Invalid column index! {index}"),
-            };
-        }
 
         /// <summary>
         /// Creates a rotation matrix. Assumes unit quaternion.
         /// </summary>
         /// <param name="rotation"></param>
         /// <returns></returns>
-        public static Matrix Matrix_Rotation(Quaternion rotation)
+        /*public static Matrix Matrix_Rotation(Quaternion rotation)
         {
             // Precalculate coordinate products
             float x = rotation.X * 2F;
@@ -725,29 +738,29 @@ namespace SCC.SuperCharacter
             m.M13 = xz + wy;            m.M23 = yz - wx;            m.M33 = 1F - (xx + yy);     m.M43 = 0F;
             m.M14 = 0F;                 m.M24 = 0F;                 m.M34 = 0F;                 m.M44 = 1F;
             return m;
-        }
+        }*/
 
         /// <summary>
         /// Creates a translation matrix.
         /// </summary>
         /// <param name="translation"></param>
         /// <returns></returns>
-        public static Matrix Matrix_Translation(Vector3 translation)
+        /*public static Matrix Matrix_Translation(Vector3 translation)
         {
             Matrix m = new();
             m.M11 = 1F; m.M12 = 0F; m.M13 = 0F; m.M14 = translation.X;
             m.M21 = 0F; m.M22 = 1F; m.M23 = 0F; m.M24 = translation.Y;
-            m.M32 = 0F; m.M32 = 0F; m.M33 = 1F; m.M34 = translation.Z;
+            m.M31 = 0F; m.M32 = 0F; m.M33 = 1F; m.M34 = translation.Z;
             m.M41 = 0F; m.M42 = 0F; m.M43 = 0F; m.M44 = 1F;
             return m;
-        }
+        }*/
 
         /// <summary>
         /// Creates a scaling matrix.
         /// </summary>
         /// <param name="scaling"></param>
         /// <returns></returns>
-        public static Matrix Matrix_Scale(Vector3 scaling)
+        /*public static Matrix Matrix_Scale(Vector3 scaling)
         {
             Matrix m = new();
             m.M11 = scaling.X;  m.M12 = 0F;         m.M13 = 0F;         m.M14 = 0F;
@@ -755,7 +768,7 @@ namespace SCC.SuperCharacter
             m.M31 = 0F;         m.M32 = 0F;         m.M33 = scaling.Z;  m.M34 = 0F;
             m.M41 = 0F;         m.M42 = 0F;         m.M43 = 0F;         m.M44 = 1F;
             return m;
-        }
+        }*/
 
         /// <summary>
         /// Transforms a direction by matrix.
@@ -763,14 +776,14 @@ namespace SCC.SuperCharacter
         /// <param name="matrix"></param>
         /// <param name="vector"></param>
         /// <returns></returns>
-        public static Vector3 Matrix_MultiplyVector(Matrix matrix, Vector3 vector)
+        /*public static Vector3 Matrix_MultiplyVector(Matrix matrix, Vector3 vector)
         {
             Vector3 res;
             res.X = matrix.M11 * vector.X + matrix.M12 * vector.Y + matrix.M13 * vector.Z;
             res.Y = matrix.M21 * vector.X + matrix.M22 * vector.Y + matrix.M23 * vector.Z;
             res.Z = matrix.M31 * vector.X + matrix.M32 * vector.Y + matrix.M33 * vector.Z;
             return res;
-        }
+        }*/
 
         /// <summary>
         /// Transforms a position by matrix, without a perspective divide. (fast)
@@ -778,14 +791,14 @@ namespace SCC.SuperCharacter
         /// <param name="matrix"></param>
         /// <param name="point"></param>
         /// <returns></returns>
-        public static Vector3 Matrix_MultiplyPoint3x4(Matrix matrix, Vector3 point)
+        /*public static Vector3 Matrix_MultiplyPoint3x4(Matrix matrix, Vector3 point)
         {
             Vector3 res;
             res.X = matrix.M11 * point.X + matrix.M12 * point.Y + matrix.M13 * point.Z + matrix.M14;
             res.Y = matrix.M21 * point.X + matrix.M22 * point.Y + matrix.M23 * point.Z + matrix.M24;
             res.Z = matrix.M31 * point.X + matrix.M32 * point.Y + matrix.M33 * point.Z + matrix.M34;
             return res;
-        }
+        }*/
 
         /// <summary>
         /// Transforms a position by matrix, with a perspective divide. (generic)
@@ -793,7 +806,7 @@ namespace SCC.SuperCharacter
         /// <param name="matrix"></param>
         /// <param name="point"></param>
         /// <returns></returns>
-        public static Vector3 Matrix_MultiplyPoint(Matrix matrix, Vector3 point)
+        /*public static Vector3 Matrix_MultiplyPoint(Matrix matrix, Vector3 point)
         {
             Vector3 res;
             float w;
@@ -807,17 +820,17 @@ namespace SCC.SuperCharacter
             res.Y *= w;
             res.Z *= w;
             return res;
-        }
+        }*/
 
         /// <summary>
         /// Returns position from matrix.
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns></returns>
-        public static Vector3 Matrix_GetPosition(Matrix matrix)
+        /*public static Vector3 Matrix_GetPosition(Matrix matrix)
         {
             return new Vector3(matrix.M14, matrix.M24, matrix.M34);
-        }
+        }*/
 
         /// <summary>
         /// Transforms a plane by matrix.
@@ -825,7 +838,7 @@ namespace SCC.SuperCharacter
         /// <param name="matrix"></param>
         /// <param name="plane"></param>
         /// <returns></returns>
-        public static Plane Matrix_TransformPlane(Matrix matrix, Plane plane)
+        /*public static Plane Matrix_TransformPlane(Matrix matrix, Plane plane)
         {
             var ittrans = Matrix.Invert(matrix);
 
@@ -837,29 +850,29 @@ namespace SCC.SuperCharacter
             var d = ittrans.M14 * x + ittrans.M24 * y + ittrans.M34 * z + ittrans.M44 * w;
 
             return new Plane(new Vector3(a, b, c), d);
-        }
+        }*/
 
         /// <summary>
         /// Returns entity's transform TRS matrix.
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static Matrix Matrix_TRS(Entity entity)
+        /*public static Matrix Matrix_TRS(Entity entity)
         {
             var t = Matrix_Translation(entity.Transform.Position);
             var r = Matrix_Rotation(entity.Transform.Rotation);
             var s = Matrix_Scale(entity.Transform.Scale);
             return t * r * s;
-        }
+        }*/
 
         /// <summary>
         /// Returns entity's transform inverse TRS matrix.
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static Matrix Matrix_TRS_Inverse(Entity entity)
+        /*public static Matrix Matrix_TRS_Inverse(Entity entity)
         {
             return Matrix.Invert(Matrix_TRS(entity));
-        }
+        }*/
     }
 }

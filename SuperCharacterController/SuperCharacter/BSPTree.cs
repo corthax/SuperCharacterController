@@ -5,6 +5,7 @@ using Stride.Core.Mathematics;
 using Stride.Rendering;
 using System;
 using Stride.Rendering.Rendering.MeshDataTool;
+using SCC.GameTools;
 
 namespace SCC.SuperCharacter
 {
@@ -39,8 +40,15 @@ namespace SCC.SuperCharacter
 
         private void Awake()
         {
-            var shape = (StaticMeshColliderShape)Entity.Get<StaticColliderComponent>().ColliderShape;
-            if (!(shape.GetType() == typeof(StaticMeshColliderShape))) { Log.Error("Only mesh colliders supported!"); return; }
+            var _c = Entity.Get<StaticColliderComponent>();
+            while (_c == null) { Log.Warning("Can't get 'StaticColliderComponent'!"); _c = Entity.Get<StaticColliderComponent>(); }
+
+            var _s = _c.ColliderShape;
+            while (_s == null) { Log.Warning("Can't get 'ColliderShape'!"); _s = _c.ColliderShape; }
+
+            if (_s.GetType() != typeof(StaticMeshColliderShape)) { Log.Warning("Only merged mesh colliders supported!"); }
+
+            var shape = (StaticMeshColliderShape)_s;
 
             mesh = shape.Model.Meshes[0];
 
@@ -56,7 +64,14 @@ namespace SCC.SuperCharacter
 
             for (int i = 0; i < tris.Length; i += 3)
             {
-                Vector3 normal = Vector3.Normalize(Vector3.Cross(vertices[tris[i + 1]] - Vector3.Normalize(vertices[tris[i]]), vertices[tris[i + 2]] - Vector3.Normalize(vertices[tris[i]])));
+                Vector3 normal = Vector3.Normalize
+                (
+                    Vector3.Cross
+                    (
+                        Vector3.Normalize(vertices[tris[i + 1]] - vertices[tris[i]]),
+                        Vector3.Normalize(vertices[tris[i + 2]] - vertices[tris[i]])
+                    )
+                );
 
                 triangleNormals[i / 3] = normal;
             }
@@ -64,6 +79,7 @@ namespace SCC.SuperCharacter
 
         public override void Start()
         {
+            Priority = -1;
             Awake();
             BuildTriangleTree();
         }
@@ -80,7 +96,7 @@ namespace SCC.SuperCharacter
 
             FindClosestTriangles(tree, to, radius, triangles);
 
-            Vector3 closest = ClosestPointOnTriangle(triangles.ToArray(), to);
+            var closest = ClosestPointOnTriangle(triangles.ToArray(), to);
 
             //return transform.TransformPoint(closest);
             return Entity.Transform.LocalToWorld(closest);
@@ -88,6 +104,7 @@ namespace SCC.SuperCharacter
 
         void FindClosestTriangles(Node node, Vector3 to, float radius, List<int> triangles)
         {
+            if (node == null) { Log.Warning("Node is null!"); return; }
             if (node.triangles == null)
             {
                 if (PointDistanceFromPlane(node.partitionPoint, node.partitionNormal, to) <= radius)
@@ -114,18 +131,16 @@ namespace SCC.SuperCharacter
         {
             float shortestDistance = float.MaxValue;
 
-            Vector3 shortestPoint = Vector3.Zero;
+            var shortestPoint = Vector3.Zero;
 
             // Iterate through all triangles
             foreach (int triangle in triangles)
             {
-                Vector3 p1 = vertices[tris[triangle]];
-                Vector3 p2 = vertices[tris[triangle + 1]];
-                Vector3 p3 = vertices[tris[triangle + 2]];
+                var p1 = vertices[tris[triangle]];
+                var p2 = vertices[tris[triangle + 1]];
+                var p3 = vertices[tris[triangle + 2]];
 
-                Vector3 nearest;
-
-                ClosestPointOnTriangleToPoint(ref p1, ref p2, ref p3, ref to, out nearest);
+                ClosestPointOnTriangleToPoint(ref p1, ref p2, ref p3, ref to, out var nearest);
 
                 float distance = (to - nearest).LengthSquared();
 
@@ -155,22 +170,22 @@ namespace SCC.SuperCharacter
 
         void RecursivePartition(List<int> triangles, int depth, Node parent)
         {
-            Vector3 partitionPoint = Vector3.Zero;
+            var partitionPoint = Vector3.Zero;
 
-            Vector3 maxExtents = new(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
-            Vector3 minExtents = new(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+            Vector3 maxExtents = new(-float.MaxValue, -float.MaxValue, -float.MaxValue);
+            Vector3 minExtents = new(float.MaxValue, float.MaxValue, float.MaxValue);
 
             foreach (int triangle in triangles)
             {
                 partitionPoint += vertices[tris[triangle]] + vertices[tris[triangle + 1]] + vertices[tris[triangle + 2]];
 
-                minExtents.X = Math.Min(Math.Min(minExtents.X, vertices[tris[triangle]].X), Math.Min(vertices[tris[triangle + 1]].X, vertices[tris[triangle + 2]].X));
-                minExtents.Y = Math.Min(Math.Min(minExtents.Y, vertices[tris[triangle]].Y), Math.Min(vertices[tris[triangle + 1]].Y, vertices[tris[triangle + 2]].Y));
-                minExtents.Z = Math.Min(Math.Min(minExtents.Z, vertices[tris[triangle]].Z), Math.Min(vertices[tris[triangle + 1]].Z, vertices[tris[triangle + 2]].Z));
+                minExtents.X = Mathf.Min(minExtents.X, vertices[tris[triangle]].X, vertices[tris[triangle + 1]].X, vertices[tris[triangle + 2]].X);
+                minExtents.Y = Mathf.Min(minExtents.Y, vertices[tris[triangle]].Y, vertices[tris[triangle + 1]].Y, vertices[tris[triangle + 2]].Y);
+                minExtents.Z = Mathf.Min(minExtents.Z, vertices[tris[triangle]].Z, vertices[tris[triangle + 1]].Z, vertices[tris[triangle + 2]].Z);
 
-                maxExtents.X = Math.Max(Math.Max(maxExtents.X, vertices[tris[triangle]].X), Math.Max(vertices[tris[triangle + 1]].X, vertices[tris[triangle + 2]].X));
-                maxExtents.Y = Math.Max(Math.Max(maxExtents.Y, vertices[tris[triangle]].Y), Math.Max(vertices[tris[triangle + 1]].Y, vertices[tris[triangle + 2]].Y));
-                maxExtents.Z = Math.Max(Math.Max(maxExtents.Z, vertices[tris[triangle]].Z), Math.Max(vertices[tris[triangle + 1]].Z, vertices[tris[triangle + 2]].Z));
+                maxExtents.X = Mathf.Max(maxExtents.X, vertices[tris[triangle]].X, vertices[tris[triangle + 1]].X, vertices[tris[triangle + 2]].X);
+                maxExtents.Y = Mathf.Max(maxExtents.Y, vertices[tris[triangle]].Y, vertices[tris[triangle + 1]].Y, vertices[tris[triangle + 2]].Y);
+                maxExtents.Z = Mathf.Max(maxExtents.Z, vertices[tris[triangle]].Z, vertices[tris[triangle + 1]].Z, vertices[tris[triangle + 2]].Z);
             }
 
             // Centroid of all vertices
@@ -179,7 +194,13 @@ namespace SCC.SuperCharacter
             // Better idea? Center of bounding box
             partitionPoint = minExtents + Math3d.SetVectorLength((maxExtents - minExtents), (maxExtents - minExtents).Length() * 0.5f);
 
-            Vector3 extentsMagnitude = new(Math.Abs(maxExtents.X - minExtents.X), Math.Abs(maxExtents.Y - minExtents.Y), Math.Abs(maxExtents.Z - minExtents.Z));
+            Vector3 extentsMagnitude =
+                new
+                (
+                    MathF.Abs(maxExtents.X - minExtents.X),
+                    MathF.Abs(maxExtents.Y - minExtents.Y),
+                    MathF.Abs(maxExtents.Z - minExtents.Z)
+                );
 
             Vector3 partitionNormal;
 
@@ -266,7 +287,7 @@ namespace SCC.SuperCharacter
 
         private static float PointDistanceFromPlane(Vector3 planeOrigin, Vector3 planeNormal, Vector3 point)
         {
-            return Math.Abs(Vector3.Dot((point - planeOrigin), planeNormal));
+            return MathF.Abs(Vector3.Dot((point - planeOrigin), planeNormal));
         }
 
         /// <summary>
@@ -293,7 +314,7 @@ namespace SCC.SuperCharacter
         /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
         /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
         /// THE SOFTWARE.
-        /// 
+
         /// </summary>
         /// <param name="point">The point to test.</param>
         /// <param name="vertex1">The first vertex to test.</param>

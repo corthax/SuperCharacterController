@@ -1,4 +1,6 @@
-﻿using Stride.Core.Mathematics;
+﻿using SCC.GameTools;
+using SCC.SuperCharacter;
+using Stride.Core.Mathematics;
 using Stride.Engine;
 using Stride.Physics;
 using System;
@@ -7,9 +9,9 @@ namespace SCC.SuperCharacter
 {
     public static class SuperCollider
     {
-        public static bool ClosestPointOnSurface(PhysicsComponent collider, Vector3 to, float radius, out Vector3 closestPointOnSurface)
+        public static bool ClosestPointOnSurface(PhysicsComponent collider, Vector3 closestTo, float radius, out Vector3 closestPointOnSurface)
         {
-            if (collider.ColliderShape is BoxColliderShape shape)
+            /*if (collider.ColliderShape is BoxColliderShape shape)
             {
                 closestPointOnSurface = ClosestPointOnSurface(shape, to, collider.Entity);
                 return true;
@@ -24,7 +26,8 @@ namespace SCC.SuperCharacter
                 closestPointOnSurface = ClosestPointOnSurface(shape2, to, collider.Entity);
                 return true;
             }
-            else if (collider.ColliderShape is StaticMeshColliderShape)
+            else*/
+            if (collider.ColliderShape is StaticMeshColliderShape)
             {
                 /*RPGMesh rpgMesh = collider.GetComponent<RPGMesh>();
 
@@ -34,13 +37,14 @@ namespace SCC.SuperCharacter
                     return true;
                 }*/
 
-                BSPTree bsp = collider.Entity.GetOrCreate<BSPTree>();
+                BSPTree bsp = collider.Entity.Get<BSPTree>();
 
                 if (bsp != null)
                 {
-                    closestPointOnSurface = bsp.ClosestPointOn(to, radius);
+                    closestPointOnSurface = bsp.ClosestPointOn(closestTo, radius);
                     return true;
                 }
+                else Helper.LogError("Can't get 'BSPTree'!");
 
                 /*BruteForceMesh bfm = collider.Get<BruteForceMesh>();
 
@@ -61,7 +65,7 @@ namespace SCC.SuperCharacter
             return false;
         }
 
-        public static Vector3 ClosestPointOnSurface(SphereColliderShape collider, Vector3 to, Entity colliderEntity)
+        /*public static Vector3 ClosestPointOnSurface(SphereColliderShape collider, Vector3 to, Entity colliderEntity)
         {
             Vector3 p;
 
@@ -78,9 +82,9 @@ namespace SCC.SuperCharacter
             p += ct.Position;
 
             return p;
-        }
+        }*/
 
-        public static Vector3 ClosestPointOnSurface(BoxColliderShape collider, Vector3 to, Entity colliderEntity)
+        /*public static Vector3 ClosestPointOnSurface(BoxColliderShape collider, Vector3 to, Entity colliderEntity)
         {
             // Cache the collider transform
             var ct = colliderEntity.Transform;
@@ -125,10 +129,10 @@ namespace SCC.SuperCharacter
 
             // Return resulting point
             return ct.LocalToWorld(localNorm);
-        }
+        }*/
 
         // Courtesy of Moodie
-        public static Vector3 ClosestPointOnSurface(CapsuleColliderShape collider, Vector3 to, Entity colliderEntity)
+        /*public static Vector3 ClosestPointOnSurface(CapsuleColliderShape collider, Vector3 to, Entity colliderEntity)
         {
             var ct = colliderEntity.Transform; // Transform of the collider
 
@@ -157,7 +161,7 @@ namespace SCC.SuperCharacter
             p.Normalize();
             p = p * collider.Radius + pt;
             return ct.LocalToWorld(p);
-        }
+        }*/
 
         /*public static Vector3 ClosestPointOnSurface(TerrainCollider collider, Vector3 to, float radius, bool debug = false)
         {

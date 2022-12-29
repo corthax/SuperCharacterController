@@ -60,7 +60,7 @@ namespace SCC.SuperCharacter
         /// </summary>
         void ConfigureCurrentState()
         {
-            Log.Info($"{state.currentState}");
+            Log.Info($"Super State: {state.currentState}");
 
             state.exitState?.Invoke();
 
