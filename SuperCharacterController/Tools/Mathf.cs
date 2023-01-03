@@ -1,7 +1,7 @@
 ﻿using Stride.Core.Mathematics;
 using System;
 
-namespace SCC.GameTools
+namespace SCC.Tools
 {
     public partial struct Mathf
     {

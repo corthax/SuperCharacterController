@@ -1,5 +1,5 @@
 ﻿using System;
-using SCC.GameTools;
+using SCC.Tools;
 using SCC.SuperCharacter;
 using Stride.Core;
 using Stride.Core.Mathematics;

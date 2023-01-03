@@ -5,7 +5,7 @@ using Stride.Core.Mathematics;
 using Stride.Rendering;
 using System;
 using Stride.Rendering.Rendering.MeshDataTool;
-using SCC.GameTools;
+using SCC.Tools;
 
 namespace SCC.SuperCharacter
 {

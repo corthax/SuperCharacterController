@@ -1,10 +1,9 @@
 ﻿using System;
-using SCC.GameTools;
 using Stride.Core.Mathematics;
 
-namespace SCC.SuperCharacter
+namespace SCC.Tools
 {
-    public static class Math3d
+    public partial struct Math3d
     {
         /*private static Math3d instance;
         public static Math3d Instance

@@ -1,4 +1,4 @@
-﻿using SCC.GameTools;
+﻿using SCC.Tools;
 using Stride.Core;
 using Stride.Core.Mathematics;
 using Stride.Engine;

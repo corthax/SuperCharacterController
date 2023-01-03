@@ -1,4 +1,4 @@
-﻿using SCC.GameTools;
+﻿using SCC.Tools;
 using Stride.Core;
 using Stride.Core.Mathematics;
 using Stride.Engine;
@@ -116,6 +116,13 @@ namespace SCC.SuperCharacter
         //private static SuperCollisionType defaultCollisionType;
         private const float CAST_DISTANCE = 10000f;
 
+        // DontGoThroughThings
+        //private float minimumExtent; // just radius
+        private Vector3 halfHeight;
+        private float partialExtent;
+        private float sqrMinimumExtent;
+        private Vector3 previousPosition;
+
         /*void OnDrawGizmos()
         {
             if (debugSpheres)
@@ -172,12 +179,47 @@ namespace SCC.SuperCharacter
             CurrentGround = new SuperGround(WalkableGroups, WalkableFlags, this/*, triggerInteraction*/);
 
             //gameObject.SendMessage("SuperStart", SendMessageOptions.DontRequireReceiver);
+
+            // DontGoThroughThings
+            partialExtent = radius * .95f;
+            sqrMinimumExtent = radius * radius;
+            halfHeight = new(0, Height / 2F, 0); // center of character
+            previousPosition = Entity.Transform.Position + halfHeight;
+        }
+
+        private void DontGoThroughThings()
+        {
+            // Have we moved more than our minimum extent?
+            var movementThisStep = (Entity.Transform.Position + halfHeight) - previousPosition;
+            var movementSqrLength = movementThisStep.LengthSquared();
+
+            if (movementSqrLength > sqrMinimumExtent)
+            {
+                var movementLength = MathF.Sqrt(movementSqrLength);
+                Log.Warning($"Moved a lot! {movementLength:N2}");
+
+                // Check for obstructions we might have missed.
+                if (Physics.Raycast(
+                    previousPosition,
+                    movementThisStep,
+                    out var hitInfo,
+                    movementLength,
+                    WalkableGroups,
+                    WalkableFlags))
+                {
+                    var snapBack = hitInfo.Point - (movementThisStep / movementLength) * partialExtent - halfHeight;
+                    Log.Warning($"Don't go! Position snap back from {Entity.Transform.Position:N2} to {snapBack:N2}");
+                    Entity.Transform.Position = snapBack; // use your teleport code here if any
+                }
+            }
+
+            previousPosition = Entity.Transform.Position + halfHeight;
         }
 
         public override void Update()
         {
             // If we are using a fixed timestep, ensure we run the main update loop
-            // a sufficient number of times based on the Time.deltaTime
+            // a sufficient number of times based on the Time.DeltaTime
             if (ManualUpdateOnly) return;
 
             if (!FixedTimeStep)
@@ -262,6 +304,7 @@ namespace SCC.SuperCharacter
 
             /*if (debugGrounding)
                 CurrentGround.DebugGround(true, true, true, true, true);*/
+            DontGoThroughThings();
 
             //AfterSingleUpdate?.Invoke();
         }

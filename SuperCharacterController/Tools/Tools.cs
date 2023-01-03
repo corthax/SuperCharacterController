@@ -3,7 +3,7 @@ using Stride.Engine;
 using Stride.Core;
 using System.Collections.Generic;
 
-namespace SCC.GameTools
+namespace SCC.Tools
 {
     public class Helper : StartupScript
     {

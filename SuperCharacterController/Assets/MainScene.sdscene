@@ -188,9 +188,6 @@ Hierarchy:
                     65b01f664fcaf5d22207593fa84d9f5c: !SCC.Physics,SuperCharacterController
                         Id: 8b76c19d-c256-4e0e-a9a9-00c2ef9ae514
                         Priority: -100
-                    5952ec6faa633acb448b66da23213ebc: !SCC.GameTools.Helper,SuperCharacterController
-                        Id: c3d62e7b-7e34-47e1-aa80-00ef64525aa8
-                        Priority: -100
                     94cc33954efdc59c1f2efbfed17c0517: !StaticColliderComponent
                         Id: 0af5137a-2f7d-4981-bb0e-6417eb7b3a20
                         Enabled: false
@@ -208,6 +205,8 @@ Hierarchy:
                                 Size: {X: 1.0, Y: 1.0, Z: 1.0}
                                 LocalOffset: {X: 0.0, Y: 0.0, Z: 0.0}
                                 LocalRotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                    5f1dad7cfabedaf347ce40eb985bab78: !SCC.Tools.Helper,SuperCharacterController
+                        Id: 391efff9-8d5c-4334-8eaf-494a307ec7a7
         -   Folder: null
             Entity:
                 Id: e6238765-b5df-4ad3-91ba-1330b60e2244

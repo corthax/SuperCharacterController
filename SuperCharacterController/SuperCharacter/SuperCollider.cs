@@ -1,9 +1,7 @@
-﻿using SCC.GameTools;
-using SCC.SuperCharacter;
+﻿using SCC.Tools;
 using Stride.Core.Mathematics;
 using Stride.Engine;
 using Stride.Physics;
-using System;
 
 namespace SCC.SuperCharacter
 {
