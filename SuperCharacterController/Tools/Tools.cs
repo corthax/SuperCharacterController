@@ -14,10 +14,12 @@ namespace SCC.Tools
             private set { instance ??= value; }
         }
 
+        [DataMemberIgnore] public float FixedTimeStep { get; private set; }
         public override void Start()
         {
             Priority = -100;
             Instance = this;
+            FixedTimeStep = Physics.Instance.Simulation.FixedTimeStep;
         }
 
         public static void LogWarning(string msg) => Instance.Log.Warning(msg);
@@ -90,6 +92,7 @@ namespace SCC.Tools
     {
         public static float DeltaTime => (float)Helper.Instance.Game.UpdateTime.Elapsed.TotalSeconds;
         public static float TimeSeconds => (float)Helper.Instance.Game.UpdateTime.Total.TotalSeconds;
+        public static float FixedDeltaTime => Helper.Instance.FixedTimeStep;
     }
 
     public class NAryDictionary<TKey, TValue> :

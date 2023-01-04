@@ -1,4 +1,5 @@
-﻿using SCC.Tools;
+﻿using SCC.SuperCharacter;
+using SCC.Tools;
 using Stride.Core;
 using Stride.Core.Mathematics;
 using Stride.Engine;
@@ -6,7 +7,7 @@ using Stride.Physics;
 using System;
 using System.Collections.Generic;
 
-namespace SCC.SuperCharacter
+namespace SCC
 {
     /// <summary>
     /// Custom character controller, to be used by attaching the component to an object
@@ -14,34 +15,27 @@ namespace SCC.SuperCharacter
     /// </summary>
     public class SuperCharacterController : SyncScript
     {
-        //private Vector3 debugMove = Vector3.Zero;
-        //private bool triggerInteraction = false;
-        [DataMemberIgnore] public bool ManualUpdateOnly { get; set; } = false;
+        [DataMemberIgnore] public float DeltaTime { get; private set; }
+        [DataMemberIgnore] public bool ManualUpdateOnly { get; set; } = true;
         [DataMemberIgnore] private bool FixedTimeStep { get; set; } = false;
-        [DataMemberIgnore] private int FixedUpdatesPerSecond { get; set; } = 40;
+        //private float fixedDeltaTime;
+        //[DataMemberIgnore] private int FixedUpdatesPerSecond { get; set; } = 40;
         [DataMemberIgnore] private bool ClampToMovingGround { get; set; } = true;
-        [DataMemberIgnore] private bool GroundClamping { get; set; } = false;
-        [DataMemberIgnore] private bool SlopeLimiting { get; set; } = true;
-        //public bool debugSpheres { get; set; } = true;
+        [DataMemberIgnore] private bool GroundClamping { get; set; } = true;
+        [DataMemberIgnore] private bool SlopeLimiting { get; set; } = false;
+
         [DataMemberIgnore]
-        private CollisionFilterGroups WalkableGroups =
+        public CollisionFilterGroups WalkableGroups { private set; get; } =
             CollisionFilterGroups.DefaultFilter;
         [DataMemberIgnore]
-        private CollisionFilterGroupFlags WalkableFlags =
+        public CollisionFilterGroupFlags WalkableFlags { private set; get; } =
             CollisionFilterGroupFlags.DefaultFilter |
             CollisionFilterGroupFlags.StaticFilter;
-
-        //[SerializeField]
-        //private bool debugGrounding;
-
-        //[SerializeField]
-        //private bool debugPushbackMesssages;
 
         /// <summary>
         /// Describes the Transform of the object we are standing on as well as it's CollisionType, as well
         /// as how far the ground is below us and what angle it is in relation to the controller.
         /// </summary>
-
         [DataContractIgnore]
         public struct Ground
         {
@@ -73,7 +67,8 @@ namespace SCC.SuperCharacter
             };
 
         [DataMemberIgnore] public PhysicsComponent ownCollider;
-        [DataMemberIgnore] public float radius = 0.5f;
+        [DataMemberIgnore] public float Radius { get; private set; } = 0.5f;
+        [DataMemberIgnore] public float HalfRadius => Radius * .5f;
 
         //[DataMemberIgnore] public float DeltaTime { get; private set; }
         [DataMemberIgnore] public SuperGround CurrentGround { get; private set; }
@@ -83,11 +78,12 @@ namespace SCC.SuperCharacter
         /// <summary>
         /// Total height of the controller from the bottom of the feet to the top of the head
         /// </summary>
-        [DataMemberIgnore] public float Height => Length + radius * 2;
+        [DataMemberIgnore] public float Height => Length + Radius * 2;
         /// <summary>
         /// Total lenght of the controller from the center of the feet to the center of the head
         /// </summary>
         [DataMemberIgnore] public float Length => Vector3.Distance(SpherePosition(Head), SpherePosition(Feet));
+        [DataMemberIgnore] public float HalfLength => Length * .5f;
         //[DataMemberIgnore] public Vector3 Up { get { return Entity.Transform.WorldMatrix.Up; } }
         //[DataMemberIgnore] public Vector3 Down { get { return Entity.Transform.WorldMatrix.Down; } }
         [DataMemberIgnore] public Vector3 Up { get { return Vector3.UnitY; } }
@@ -101,7 +97,6 @@ namespace SCC.SuperCharacter
         //public event UpdateDelegate AfterSingleUpdate;
 
         private Vector3 initialPosition;
-        //private Vector3 groundOffset;
         private Vector3 lastGroundPosition;
 
         private List<PhysicsComponent> ignoredColliders = new();
@@ -109,38 +104,17 @@ namespace SCC.SuperCharacter
 
         private const float TOLERANCE = .05f;
         private const float TINY_TOLERANCE = .01f;
-        private const int MAX_PUSHBACK_ITERATIONS = 3;
+        private const byte MAX_PUSHBACK_ITERATIONS = 3;
         private CollisionFilterGroups TemporaryLayerIndex;
-        private float fixedDeltaTime;
-
-        //private static SuperCollisionType defaultCollisionType;
         private const float CAST_DISTANCE = 10000f;
 
         // DontGoThroughThings
-        //private float minimumExtent; // just radius
+        //private float minimumExtent; // superCharacter.radius
         private Vector3 halfHeight;
-        private float partialExtent;
+        [DataMemberIgnore] public float PartialExtent { private set; get; }
         private float sqrMinimumExtent;
-        private Vector3 previousPosition;
+        public Vector3 PreviousPosition { get; private set; }
 
-        /*void OnDrawGizmos()
-        {
-            if (debugSpheres)
-            {
-                if (spheres != null)
-                {
-                    if (HeightScale == 0) HeightScale = 1;
-
-                    foreach (var sphere in spheres)
-                    {
-                        var color = sphere.isFeet ? Color.Green : (sphere.isHead ? Color.Yellow : Color.Cyan);
-                        var _c = new Vector3(color.R, color.G, color.B);
-                        var _m = Matrix.Translation((BulletSharp.Math.Vector3)SpherePosition(sphere));
-                        DrawSphere(radius, ref _m, ref _c);
-                    }
-                }
-            }
-        }*/
 
         private void Awake()
         {
@@ -150,13 +124,13 @@ namespace SCC.SuperCharacter
         public override void Start()
         {
             Awake();
-            Log.Info("SCC: Start!");
+            //Log.Info("SCC: Start!");
 
             if (ownCollider != null) IgnoreCollider(ownCollider);
 
             TemporaryLayerIndex = CollisionFilterGroups.CustomFilter10;
             CurrentlyClampedTo = null;
-            fixedDeltaTime = 1.0f / FixedUpdatesPerSecond;
+            DeltaTime = Time.FixedDeltaTime;
 
             foreach (var sphere in spheres)
             {
@@ -173,115 +147,112 @@ namespace SCC.SuperCharacter
             if (Head == null)
                 Log.Error("Head not found on controller!");
 
-            //defaultCollisionType ??= new Entity("DefaultSuperCollisionType").GetOrCreate<SuperCollisionType>();
-            //defaultCollisionType.Entity.Scene= Entity.Scene;
-
-            CurrentGround = new SuperGround(WalkableGroups, WalkableFlags, this/*, triggerInteraction*/);
-
-            //gameObject.SendMessage("SuperStart", SendMessageOptions.DontRequireReceiver);
+            CurrentGround = new SuperGround(WalkableGroups, WalkableFlags, this);
 
             // DontGoThroughThings
-            partialExtent = radius * .95f;
-            sqrMinimumExtent = radius * radius;
-            halfHeight = new(0, Height / 2F, 0); // center of character
-            previousPosition = Entity.Transform.Position + halfHeight;
+            PartialExtent = Radius * .95f;
+            sqrMinimumExtent = Radius * Radius;
+            halfHeight = new(0, Height * .5f, 0); // center of character
+            PreviousPosition = Entity.Transform.Position + halfHeight;
         }
 
         private void DontGoThroughThings()
         {
             // Have we moved more than our minimum extent?
-            var movementThisStep = (Entity.Transform.Position + halfHeight) - previousPosition;
+            var movementThisStep = (Entity.Transform.Position + halfHeight) - PreviousPosition;
             var movementSqrLength = movementThisStep.LengthSquared();
 
             if (movementSqrLength > sqrMinimumExtent)
             {
                 var movementLength = MathF.Sqrt(movementSqrLength);
-                Log.Warning($"Moved a lot! {movementLength:N2}");
+                //Log.Warning($"Moved a lot! {movementLength:N2}");
 
                 // Check for obstructions we might have missed.
                 if (Physics.Raycast(
-                    previousPosition,
-                    movementThisStep,
-                    out var hitInfo,
+                    PreviousPosition,
+                    Vector3.Normalize(movementThisStep),
                     movementLength,
+                    out var hitInfo,
+                    out var _,
                     WalkableGroups,
                     WalkableFlags))
                 {
-                    var snapBack = hitInfo.Point - (movementThisStep / movementLength) * partialExtent - halfHeight;
-                    Log.Warning($"Don't go! Position snap back from {Entity.Transform.Position:N2} to {snapBack:N2}");
-                    Entity.Transform.Position = snapBack; // use your teleport code here if any
+                    var snapBack = hitInfo.Point - (movementThisStep / movementLength) * PartialExtent - halfHeight;
+                    Log.Warning($"Don't go! Position snap from {Entity.Transform.Position:N2} to {snapBack:N2}");
+                    //playerMachine.ThisPlayer.Teleport(snapBack);
+                    Entity.Transform.Position = snapBack;
                 }
             }
 
-            previousPosition = Entity.Transform.Position + halfHeight;
+            PreviousPosition = Entity.Transform.Position + halfHeight;
+        }
+
+        public void SetPreviousPosition()
+        {
+            PreviousPosition = Entity.Transform.Position + halfHeight;
+        }
+
+        // Can run less than Update.
+        private float timeRemainder;
+        public void FixedUpdate()
+        {
+            timeRemainder += Time.DeltaTime;
+            short fixedUpdates = (short)(timeRemainder / DeltaTime); // DeltaTime = Time.FixedDeltaTime
+            timeRemainder -= DeltaTime * fixedUpdates;
+            while (fixedUpdates > 0) { SingleUpdate(); fixedUpdates--; }
+            //for (ushort i = 0; i < fixedUpdates; i++) SingleUpdate();
         }
 
         public override void Update()
         {
-            // If we are using a fixed timestep, ensure we run the main update loop
-            // a sufficient number of times based on the Time.DeltaTime
             if (ManualUpdateOnly) return;
 
-            if (!FixedTimeStep)
+            if (FixedTimeStep)
             {
-                //Log.Info("SCC update");
-                //DeltaTime = Time.DeltaTime;
-                SingleUpdate();
+                // If we are using a fixed timestep, ensure we run the main update loop
+                // a sufficient number of times based on the "Time.DeltaTime".
+                // Will always execute more or equal to Update, not less! 
+                /*float delta = Time.DeltaTime;
+                while (delta > Time.FixedDeltaTime)
+                {
+                    SingleUpdate();
+                    delta -= Time.FixedDeltaTime;
+                }
+                if (delta > 0) SingleUpdate();*/
+
+                FixedUpdate();
             }
             else
             {
-                //Log.Info("SCC fixed update");
-                float delta = Time.DeltaTime;
-
-                while (delta > fixedDeltaTime)
-                {
-                    //DeltaTime = fixedDeltaTime;
-
-                    SingleUpdate();
-
-                    delta -= fixedDeltaTime;
-                }
-
-                if (delta > 0f)
-                {
-                    //DeltaTime = delta;
-
-                    SingleUpdate();
-                }
+                DeltaTime = Time.DeltaTime;
+                SingleUpdate();
             }
         }
 
         public void ManualUpdate(float deltaTime)
         {
-            //DeltaTime = deltaTime;
-
             SingleUpdate();
         }
 
-        void SingleUpdate()
+        private void SingleUpdate()
         {
             // Check if we are clamped to an object implicity or explicity
             bool isClamping = GroundClamping || CurrentlyClampedTo != null;
             Entity clampedTo = CurrentlyClampedTo ?? CurrentGround.Object;
 
-            if (clampedTo != null)
+            if (clampedTo != null && ClampToMovingGround && isClamping)
             {
-                var delta = clampedTo.Transform.Position - lastGroundPosition;
-                if (ClampToMovingGround && isClamping && delta != Vector3.Zero)
-                    Entity.Transform.Position += delta;
+                Entity.Transform.Position += clampedTo.Transform.Position - lastGroundPosition;
             }
+
+            //if (CurrentGround == null) { Helper.LogScreen("No ground.", new Int2(10, 300)); }
 
             initialPosition = Entity.Transform.Position;
 
             ProbeGround();
 
-            //Entity.Transform.Position += debugMove * DeltaTime;
-
-            ///*****************************************
-            /// Call your state machine SuperUpdate here!
-            ///*****************************************
-            /// YourController.DoSomeSuperUpdate();
-            BasicCameraController.Instance.DoSuperUpdate();
+            //gameObject.SendMessage("SuperUpdate", SendMessageOptions.DontRequireReceiver);
+            BasicCameraController.Instance.DoSuperUpdate(); // important to call it right here
 
             CollisionData.Clear();
 
@@ -289,8 +260,8 @@ namespace SCC.SuperCharacter
 
             ProbeGround();
 
-            if (SlopeLimiting && CurrentGround.IsGrounded(true, TINY_TOLERANCE)) SlopeLimit();
-            //if (SlopeLimiting) SlopeLimit(); // then manually disable SlopeLimiting if character is not grounded
+            //if (SlopeLimiting && CurrentGround.IsGrounded(true, TINY_TOLERANCE)) SlopeLimit();
+            if (SlopeLimiting) SlopeLimit(); // then manually disable SlopeLimiting if character is not grounded
 
             ProbeGround();
 
@@ -299,17 +270,14 @@ namespace SCC.SuperCharacter
             isClamping = GroundClamping || CurrentlyClampedTo != null;
             clampedTo = CurrentlyClampedTo ?? CurrentGround.Object;
 
-            if (isClamping)
+            if (isClamping && clampedTo != null)
                 lastGroundPosition = clampedTo.Transform.Position;
 
-            /*if (debugGrounding)
-                CurrentGround.DebugGround(true, true, true, true, true);*/
             DontGoThroughThings();
-
             //AfterSingleUpdate?.Invoke();
         }
 
-        void ProbeGround()
+        private void ProbeGround()
         {
             PushIgnoredColliders();
             CurrentGround.ProbeGround(SpherePosition(Feet));
@@ -320,10 +288,9 @@ namespace SCC.SuperCharacter
         /// Prevents the player from walking up slopes of a larger angle than the object's SlopeLimit.
         /// </summary>
         /// <returns>True if the controller attemped to ascend a too steep slope and had their movement limited</returns>
-        bool SlopeLimit()
+        private void SlopeLimit()
         {
-            //if (CurrentGround == null) { Log.Warning("'CurrentGround' is null!"); return false; }
-
+            if (CurrentGround == null) return;
             Vector3 _n = CurrentGround.PrimaryNormal();
             float _a = Mathf.Angle(_n, Up);
 
@@ -337,43 +304,49 @@ namespace SCC.SuperCharacter
 
                 float angle = Mathf.Angle(absoluteMoveDirection, _v);
 
-                if (angle <= 90.0f)
-                    return false;
+                if (angle <= 90.0f) return;
 
                 // Calculate where to place the controller on the slope, or at the bottom, based on the desired movement distance
                 Vector3 resolvedPosition = Math3d.ProjectPointOnLine(initialPosition, _r, Entity.Transform.Position);
                 Vector3 direction = Math3d.ProjectVectorOnPlane(_n, resolvedPosition - Entity.Transform.Position);
 
                 // Check if our path to our resolved position is blocked by any colliders
-                if (Physics.CapsuleCast(
+                /*if (Physics.CapsuleCast(
                     SpherePosition(Feet),
                     SpherePosition(Head),
-                    radius,
+                    Radius,
                     Vector3.Normalize(direction),
-                    out var hit,
-                    out var hitDistance,
                     direction.Length(),
+                    out var _, // hit info
+                    out var hitDistance, // center distance
+                    out var _, // point distance
+                    WalkableGroups,
+                    WalkableFlags))*/
+                if (Physics.SphereCast(
+                    SpherePosition(Feet),
+                    Radius,
+                    Vector3.Normalize(direction),
+                    direction.Length(),
+                    out var _, // hit info
+                    out var hitDistanceCenter,
                     WalkableGroups,
                     WalkableFlags))
                 {
-                    var dist = Vector3.Normalize(_v) * hitDistance;
-                    Helper.LogScreen($"Move to capsule cast: {dist:N2}", new Int2(10, 210));
+                    var dist = (Vector3.Normalize(_v) * hitDistanceCenter) + (HalfLength * Up);
+                    Helper.LogInfo($"Move to cast: {dist:N2}");
                     Entity.Transform.Position += dist;
                 }
                 else
                 {
-                    Helper.LogScreen($"Move: {direction:N2}", new Int2(10, 230));
+                    Helper.LogInfo($"Move: {direction:N2}");
                     Entity.Transform.Position += direction;
                 }
-
-                return true;
             }
-
-            return false;
         }
 
-        void ClampToGround()
+        private void ClampToGround()
         {
+            if (CurrentGround == null) return;
             Entity.Transform.Position -= Up * CurrentGround.Distance();
         }
 
@@ -397,16 +370,16 @@ namespace SCC.SuperCharacter
             SlopeLimiting = false;
         }
 
-        /*public bool IsClamping()
+        public bool IsClamping()
         {
             return GroundClamping;
-        }*/
+        }
 
         /// <summary>
         /// Check if any of the CollisionSpheres are colliding with any walkable objects in the world.
         /// If they are, apply a proper pushback and retrieve the collision data
         /// </summary>
-        void RecursivePushback(int depth, int maxDepth)
+        private void RecursivePushback(int depth, byte maxDepth)
         {
             PushIgnoredColliders();
 
@@ -416,31 +389,22 @@ namespace SCC.SuperCharacter
             {
                 foreach (var hr in Physics.OverlapSphere(
                     SpherePosition(sphere),
-                    radius,
+                    Radius,
                     WalkableGroups,
                     WalkableFlags))
                 {
                     var spherePosition = SpherePosition(sphere);
                     var physicsComponent = hr.Collider;
-                    bool contactPointSuccess = SuperCollider.ClosestPointOnSurface(physicsComponent, spherePosition, radius, out var contactPoint);
+                    bool contactPointSuccess = SuperCollider.ClosestPointOnSurface(physicsComponent, spherePosition, Radius, out var contactPoint);
 
                     if (!contactPointSuccess)
                     {
-                        continue; // return?
+                        return;
                     }
-
-                    //Tools.LogInfo("Pushback!");
-                    /*if (debugPushbackMesssages)
-                        DebugDraw.DrawMarker(contactPoint, 2.0f, Color.cyan, 0.0f, false);*/
 
                     var _v = contactPoint - spherePosition; // direction to contact point
                     if (_v != Vector3.Zero)
                     {
-                        /*if (sphere.isFeet)
-                            Tools.LogScreen($"Feet: {_v:N2}", new Int2(10, 150));
-                        else if (sphere.isHead)
-                            Tools.LogScreen($"Head: {_v:N2}", new Int2(10, 170));*/
-
                         // Cache the collider's layer so that we can cast against it
                         var layer = physicsComponent.CollisionGroup;
 
@@ -459,9 +423,9 @@ namespace SCC.SuperCharacter
                         // Orient and scale our vector based on which side of the normal we are situated
                         if (facingNormal)
                         {
-                            if (Vector3.Distance(spherePosition, contactPoint) < radius)
+                            if (Vector3.Distance(spherePosition, contactPoint) < Radius)
                             {
-                                _v = Vector3.Normalize(_v) * (radius - _v.Length()) * -1;
+                                _v = Vector3.Normalize(_v) * (Radius - _v.Length()) * -1;
                             }
                             else
                             {
@@ -471,12 +435,12 @@ namespace SCC.SuperCharacter
                         }
                         else
                         {
-                            _v = Vector3.Normalize(_v) * (radius + _v.Length());
+                            _v = Vector3.Normalize(_v) * (Radius + _v.Length());
                         }
 
                         contact = true;
 
-                        Helper.LogScreen($"Pushback: {_v:N2}", new Int2(10, 150));
+                        //Helper.LogScreen($"Pushback: {_v:N2}", new Int2(10, 150));
                         Entity.Transform.Position += _v; // move
 
                         physicsComponent.CollisionGroup = TemporaryLayerIndex;
@@ -488,7 +452,6 @@ namespace SCC.SuperCharacter
                             TINY_TOLERANCE,
                             out var normalHit,
                             CAST_DISTANCE,
-                            //playerMachine.Simulation,
                             (CollisionFilterGroups)(1 << (int)TemporaryLayerIndex),
                             WalkableFlags);
 
@@ -649,7 +612,7 @@ namespace SCC.SuperCharacter
                 Vector3 _origin = origin + (controller.Up * TOLERANCE);
 
                 // Reduce our radius by Tolerance squared to avoid failing the SphereCast due to clipping with walls
-                float smallerRadius = controller.radius - (TOLERANCE * TOLERANCE);
+                float smallerRadius = controller.Radius - (TOLERANCE * TOLERANCE);
 
                 HitResult hit; // reused
 
@@ -666,13 +629,13 @@ namespace SCC.SuperCharacter
                     var superColType = Object.GetOrCreate<SuperCollisionType>();
                     MySuperCollisionType = superColType;
 
-                    Helper.LogScreen($"ProbeGround: SphereCast Normal: {hit.Normal:N2}", new Int2(10, 10));
+                    //Helper.LogScreen($"ProbeGround: SphereCast Normal: {hit.Normal:N2}", new Int2(10, 10));
 
                     // By reducing the initial SphereCast's radius by Tolerance, our casted sphere no longer fits with
                     // our controller's shape. Reconstruct the sphere cast with the proper radius
                     SimulateSphereCast(hit.Normal, out hit, out float hitDistance);
 
-                    Helper.LogScreen($"ProbeGround: SimulateSphereCast Normal: {hit.Normal:N2} Distance: {hitDistance:N2}", new Int2(10, 30));
+                    //Helper.LogScreen($"ProbeGround: SimulateSphereCast Normal: {hit.Normal:N2} Distance: {hitDistance}:N2", new Int2(10, 30));
 
                     primaryGround = new GroundHit(hit.Point, hit.Normal, hitDistance);
 
@@ -681,7 +644,7 @@ namespace SCC.SuperCharacter
                     var _projection = Math3d.ProjectPointOnPlane(controller.Up, controller.Entity.Transform.Position, hit.Point);
                     if (Vector3.Distance(_projection, controller.Entity.Transform.Position) < TINY_TOLERANCE)
                     {
-                        Helper.LogScreen($"ProbeGround: Below is flat: {_projection:N2}", new Int2(10, 50));
+                        //Helper.LogScreen($"ProbeGround: Below is flat: {_projection:N2}", new Int2(10, 50));
                         return;
                     }
 
@@ -699,21 +662,20 @@ namespace SCC.SuperCharacter
                     Physics.Raycast(
                         nearPoint,
                         controller.Down,
-                        out HitResult nearHit,
                         CAST_DISTANCE,
+                        out HitResult nearHit,
+                        out var nearHitDistance,
                         walkableGroups,
                         walkableFlags);
                     Physics.Raycast(
                         farPoint,
                         controller.Down,
-                        out HitResult farHit,
                         CAST_DISTANCE,
+                        out HitResult farHit,
+                        out var farHitDistance,
                         walkableGroups,
                         walkableFlags);
 
-
-                    var nearHitDistance = Vector3.Distance(nearPoint, nearHit.Point);
-                    var farHitDistance = Vector3.Distance(farPoint, farHit.Point);
                     nearGround = new GroundHit(nearHit.Point, nearHit.Normal, nearHitDistance);
                     farGround = new GroundHit(farHit.Point, farHit.Normal, farHitDistance);
 
@@ -721,7 +683,7 @@ namespace SCC.SuperCharacter
                     // we are likely flush against it on the ground. Retrieve what we are standing on
                     if (Mathf.Angle(hit.Normal, controller.Up) > superColType.StandAngle)
                     {
-                        Helper.LogScreen($"ProbeGround: Angle: {Mathf.Angle(hit.Normal, controller.Up):N2}", new Int2(10, 50));
+                        //Helper.LogScreen($"ProbeGround: Angle: {Mathf.Angle(hit.Normal, controller.Up):N2}", new Int2(10, 50));
                         // Retrieve a vector pointing down the slope
                         var _r = Vector3.Cross(hit.Normal, controller.Down);
                         var downTheSlope = Vector3.Cross(_r, hit.Normal);
@@ -730,12 +692,13 @@ namespace SCC.SuperCharacter
                         if (Physics.Raycast(
                             flushOrigin,
                             downTheSlope,
-                            out var flushHit,
                             CAST_DISTANCE,
+                            out var flushHit,
+                            out var _,
                             walkableGroups,
                             walkableFlags))
                         {
-                            Helper.LogScreen($"ProbeGround: Slope end: {flushHit.Point:N2}", new Int2(10, 70));
+                            //Helper.LogScreen($"ProbeGround: Slope end: {flushHit.Point:N2}", new Int2(10, 70));
                             if (SimulateSphereCast(
                                 flushHit.Normal,
                                 out var sphereCastHit,
@@ -755,7 +718,7 @@ namespace SCC.SuperCharacter
                     // it is connected to at it's base, if there exists any
                     if (Mathf.Angle(nearHit.Normal, controller.Up) > superColType.StandAngle || nearHitDistance > TOLERANCE)
                     {
-                        Helper.LogScreen($"ProbeGround: Wall to ground.", new Int2(10, 90));
+                        //Helper.LogScreen($"ProbeGround: Wall to ground.", new Int2(10, 90));
                         var col = nearHit.Collider.Entity.GetOrCreate<SuperCollisionType>();
 
                         //col ??= defaultCollisionType;
@@ -764,7 +727,7 @@ namespace SCC.SuperCharacter
                         // the wall to retrieve the proper landing
                         if (Mathf.Angle(nearHit.Normal, controller.Up) > col.StandAngle)
                         {
-                            Helper.LogScreen($"ProbeGround: Sliding slope.", new Int2(10, 110));
+                            //Helper.LogScreen($"ProbeGround: Sliding slope.", new Int2(10, 110));
                             // Retrieve a vector pointing down the slope
                             Vector3 _r = Vector3.Cross(nearHit.Normal, controller.Down);
                             Vector3 downTheSlope = Vector3.Cross(_r, nearHit.Normal);
@@ -772,17 +735,18 @@ namespace SCC.SuperCharacter
                             if (Physics.Raycast(
                                 nearPoint,
                                 downTheSlope,
-                                out var stepHit,
                                 CAST_DISTANCE,
+                                out var stepHit,
+                                out var stepHitDistance,
                                 walkableGroups,
                                 walkableFlags))
                             {
-                                stepGround = new GroundHit(stepHit.Point, stepHit.Normal, Vector3.Distance(nearPoint, stepHit.Point));
+                                stepGround = new GroundHit(stepHit.Point, stepHit.Normal, stepHitDistance);
                             }
                         }
                         else
                         {
-                            Helper.LogScreen($"ProbeGround: Standing slope.", new Int2(10, 110));
+                            //Helper.LogScreen($"ProbeGround: Standing slope.", new Int2(10, 110));
                             stepGround = new GroundHit(nearHit.Point, nearHit.Normal, nearHitDistance);
                         }
                     }
@@ -792,17 +756,17 @@ namespace SCC.SuperCharacter
                 else if (Physics.Raycast(
                     _origin,
                     controller.Down,
-                    out hit,
                     CAST_DISTANCE,
+                    out hit,
+                    out var hitDistance,
                     walkableGroups,
                     walkableFlags))
                 {
-                    float hitDistance = Vector3.Distance(_origin, hit.Point);
                     Object = hit.Collider.Entity;
                     var superColType = Object.GetOrCreate<SuperCollisionType>();
                     MySuperCollisionType = superColType;
 
-                    Helper.LogScreen($"ProbeGround: Clipping a wall.", new Int2(10, 90));
+                    //Helper.LogScreen($"ProbeGround: Clipping a wall.", new Int2(10, 90));
 
                     if (SimulateSphereCast(
                         hit.Normal,
@@ -906,19 +870,21 @@ namespace SCC.SuperCharacter
                 Vector3 _p = Math3d.ProjectPointOnPlane(controller.Up, controller.Entity.Transform.Position, point);
                 float distanceFromCenter = Vector3.Distance(_p, controller.Entity.Transform.Position);
 
-                return distanceFromCenter <= distanceRatio * controller.radius;
+                return distanceFromCenter <= distanceRatio * controller.Radius;
             }
 
             // SlopeLimit
             public Vector3 PrimaryNormal()
             {
-                return primaryGround.Normal;
+                if (primaryGround == null) return Vector3.UnitY;
+                else return primaryGround.Normal;
             }
 
             // ClapmToGround
             public float Distance()
             {
-                return primaryGround.Distance;
+                if (primaryGround == null) return 0F;
+                else return primaryGround.Distance;
             }
 
             /// <summary>
@@ -927,19 +893,19 @@ namespace SCC.SuperCharacter
             /// normal
             /// </summary>
             /// <param name="groundNormal">Normal of a triangle assumed to be directly below the controller</param>
-            /// <param name="hit">Simulated SphereCast data</param>
-            /// <returns>True if the raycast is successful</returns>
-            private bool SimulateSphereCast(Vector3 groundNormal, out HitResult hit, out float hitDistance)
+            /// <param name="hitResult">Simulated SphereCast data</param>
+            /// <returns>success, hitResult, hitDistance</returns>
+            private bool SimulateSphereCast(Vector3 groundNormal, out HitResult hitResult, out float hitDistance)
             {
                 float groundAngle = Mathf.Angle(groundNormal, controller.Up, true);
 
                 Vector3 secondaryOrigin = controller.Entity.Transform.Position + controller.Up * TOLERANCE;
 
-                if (!MathUtil.NearEqual(groundAngle, 0))
-                //if (!Mathf.Approximately(groundAngle, 0))
+                //if (!MathUtil.NearEqual(groundAngle, 0))
+                if (!Mathf.Approximately(groundAngle, 0))
                 {
-                    float horizontal = MathF.Sin(groundAngle) * controller.radius;
-                    float vertical = (1.0f - MathF.Cos(groundAngle)) * controller.radius;
+                    float horizontal = MathF.Sin(groundAngle) * controller.Radius;
+                    float vertical = (1.0f - MathF.Cos(groundAngle)) * controller.Radius;
 
                     // Retrieve a vector pointing up the slope
                     Vector3 r2 = Vector3.Cross(groundNormal, controller.Down);
@@ -953,14 +919,14 @@ namespace SCC.SuperCharacter
                 if (Physics.Raycast(
                     secondaryOrigin,
                     controller.Down,
-                    out hit,
                     CAST_DISTANCE,
+                    out hitResult,
+                    out hitDistance,
                     walkableGroups,
                     walkableFlags))
                 {
                     // Remove the tolerance from the distance travelled
-                    hitDistance = Vector3.Distance(secondaryOrigin, hit.Point);
-                    hitDistance -= TOLERANCE + TINY_TOLERANCE;
+                    hitDistance -= (TOLERANCE + TINY_TOLERANCE);
 
                     return true;
                 }
